@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="hi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PassFast 🔐 Private Password Vault</title>
+<meta name="description" content="PassFast: private digital tijori. Passwords ko bolkar ya fingerprint se turant nikaalo. Sab kuch aapke phone me encrypted, kisi server par nahi.">
+<meta name="theme-color" content="#2563eb">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<meta property="og:type" content="website"><meta property="og:title" content="PassFast 🔐 Private Password Vault">
+<meta property="og:description" content="Voice se chalne wali encrypted password tijori. Data sirf aapke phone me.">
+<meta property="og:image" content="https://YOUR-DOMAIN/og-image.jpg"><meta property="og:image:alt" content="PassFast private password vault"><meta property="og:url" content="https://YOUR-DOMAIN/">
+<meta name="twitter:card" content="summary_large_image"><link rel="canonical" href="https://YOUR-DOMAIN/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔐%3C/text%3E%3C/svg%3E">
+
+<style>/* PassFast styles (all <style> blocks of the app, in original order) */
+:root{--bg:#f3f1ff;--card:#fff;--tx:#1d1b3a;--mut:#6b6990;--ac:#2563eb;--ac2:#0891b2;--bd:#e3e0ff;--bad:#e5484d;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e0d1f;--card:#1a1836;--tx:#f0eeff;--mut:#9a97c4;--bd:#2d2a57}}
+:root[data-theme="dark"]{--bg:#0e0d1f;--card:#1a1836;--tx:#f0eeff;--mut:#9a97c4;--bd:#2d2a57}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+.wrap{max-width:560px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:22px;margin:0 0 4px}p.s{color:var(--mut);margin:0 0 18px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:16px;margin-bottom:14px;animation:up .4s ease both}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+input{width:100%;padding:12px 14px;margin:5px 0;border-radius:12px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:16px}
+button{cursor:pointer;border:0;border-radius:12px;padding:12px 16px;font-size:15px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--ac),#1d4ed8)}
+button.g{background:var(--bg);color:var(--tx);border:1px solid var(--bd)}button.d{background:var(--bad)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>*{flex:1}
+.hide{display:none!important}
+.lock{text-align:center;padding-top:40px}
+.lockico{font-size:64px;display:inline-block;animation:fl 3s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-10px) rotate(-6deg)}}
+.micwrap{display:flex;flex-direction:column;align-items:center;margin:14px 0 20px}
+.reactor{position:relative;width:170px;height:170px;border-radius:50%;cursor:pointer;display:grid;place-items:center;-webkit-tap-highlight-color:transparent;background:radial-gradient(circle,rgba(14,165,183,.2),transparent 70%)}
+.reactor .r{position:absolute;border-radius:50%}
+.r1{inset:0;border:3px dashed #0ea5b7;animation:spin 14s linear infinite;box-shadow:0 0 25px rgba(14,165,183,.5),inset 0 0 25px rgba(14,165,183,.3)}
+.r2{inset:16px;border:6px solid transparent;border-top-color:#0ea5b7;border-bottom-color:#0ea5b7;animation:spin 6s linear infinite reverse}
+.r3{inset:36px;border:2px solid #9ff8ff;box-shadow:0 0 18px #0ea5b7;background:repeating-conic-gradient(rgba(14,165,183,.35) 0 20deg,transparent 20deg 40deg);animation:spin 9s linear infinite}
+.core{position:relative;width:62px;height:62px;border-radius:50%;display:grid;place-items:center;font-size:28px;background:radial-gradient(circle,#fff 0,#b8fbff 30%,#0ea5b7 70%);box-shadow:0 0 30px 8px rgba(14,165,183,.8);animation:beat 2.4s ease-in-out infinite}
+.reactor.on .r1{animation-duration:3s}.reactor.on .r2{animation-duration:1.5s}.reactor.on .r3{animation-duration:2s}
+.reactor.on .core{animation:beat .6s infinite;box-shadow:0 0 50px 16px rgba(14,165,183,.95)}
+.reactor.on::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid #0ea5b7;animation:rp 1.2s infinite}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes beat{50%{transform:scale(1.1)}}
+.hud{font-family:ui-monospace,Menlo,monospace;letter-spacing:3px;font-size:12px;color:#0ea5b7;margin-top:14px;text-shadow:0 0 8px #0ea5b7;animation:blink 2s infinite}
+@keyframes blink{50%{opacity:.55}}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 6px}
+.chip{padding:7px 11px;font-size:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:999px;animation:up .4s both}
+.chip:active{transform:scale(.93)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 20% 10%,rgba(8,145,178,.18),transparent 45%),radial-gradient(circle at 80% 90%,rgba(37,99,235,.22),transparent 45%);animation:drift 10s ease-in-out infinite alternate,hue 25s linear infinite}
+@keyframes drift{to{transform:scale(1.25) translate(-3%,2%)}}
+#say{margin-top:10px;max-width:94%;padding:12px 14px;border-radius:16px;background:rgba(14,165,183,.1);border:1px solid rgba(14,165,183,.45);color:var(--tx);font-size:15px;text-align:center;box-shadow:0 0 18px rgba(14,165,183,.25);animation:pop .4s both}#say:empty{display:none}
+h1{background:linear-gradient(90deg,#0ea5b7,#2563eb,#0891b2,#0ea5b7);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 6s linear infinite}
+@keyframes flow{to{background-position:300% 0}}@keyframes hue{to{filter:hue-rotate(360deg)}}
+.card{box-shadow:0 0 0 1px rgba(37,99,235,.18),0 10px 30px rgba(0,0,0,.25)}
+select{width:100%;padding:12px;border-radius:12px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:15px;margin:5px 0}
+.wave{display:flex;gap:3px;align-items:center;height:38px;margin-top:10px}.wave i{width:4px;height:6px;border-radius:3px;background:linear-gradient(#0ea5b7,#2563eb,#0891b2);opacity:.45}
+.reactor.on~.wave i,.wave.sp i{animation:wv .6s ease-in-out infinite alternate;opacity:1}@keyframes wv{to{height:36px}}
+.cmd{width:100%;margin-top:14px;flex-wrap:nowrap}.cmd input{flex:1}
+.meter{height:8px;border-radius:8px;background:var(--bd);overflow:hidden;margin-top:8px}.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0ea5b7,#2563eb,#0891b2);transition:width .08s}
+.chip{display:inline-flex;align-items:center;gap:7px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 6px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:16px;font-size:13px;animation:up .4s both}
+.tile:active{transform:scale(.94)}.tile span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fp{position:relative;width:170px;height:190px;margin:10px auto 4px;display:grid;place-items:center;cursor:pointer;animation:fpin 1s cubic-bezier(.2,1.3,.4,1) both;-webkit-tap-highlight-color:transparent}
+.fp::before,.fp::after{content:"";position:absolute;inset:8px 10px;border-radius:50%/45%;border:2px solid rgba(14,165,183,.55);animation:fpr 2.4s infinite}
+.fp::after{animation-delay:1.2s}.fp svg{filter:drop-shadow(0 0 10px rgba(14,165,183,.7));transition:transform .2s}
+.fp:active svg{transform:scale(.93)}
+.beam{animation:scan 2.4s ease-in-out infinite;filter:drop-shadow(0 0 6px #0ea5b7)}
+@keyframes scan{0%,100%{transform:translateY(10px)}50%{transform:translateY(126px)}}
+@keyframes fpin{from{opacity:0;transform:scale(.3) rotate(-30deg)}}
+@keyframes fpr{from{transform:scale(.9);opacity:.8}to{transform:scale(1.35);opacity:0}}
+.fp.ok #ridges{stroke:#3dffa0}.fp.ok .beam{display:none}.fp.ok svg{filter:drop-shadow(0 0 18px #3dffa0);transform:scale(1.08)}
+.fp.bad{animation:shake .4s}.fp.bad #ridges{stroke:#ff4d6d}@keyframes shake{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+.lock{padding-top:4vh}.lock h1{font-size:30px;animation:up .6s .3s both,flow 6s linear infinite}
+.lock .s{animation:up .6s .45s both}.lock input,.lock .row,.lock #unlock{animation:up .6s .6s both}
+.enter{animation:appin .8s cubic-bezier(.2,.9,.3,1) both}@keyframes appin{from{opacity:0;transform:scale(.92) translateY(24px);filter:blur(8px)}}
+.item{flex-wrap:wrap}.item>div:first-child{min-width:0;flex:1}.item .row{flex:none}.item .row button{padding:10px 12px;white-space:nowrap}
+.owner{display:flex;align-items:center;gap:14px;padding:10px 14px;margin:0 0 16px;border-radius:20px;text-align:left;background:linear-gradient(135deg,rgba(14,165,183,.13),rgba(37,99,235,.18));border:1px solid rgba(37,99,235,.4);animation:up .6s both}
+.flip{width:72px;height:72px;perspective:700px;cursor:pointer;flex:none;-webkit-tap-highlight-color:transparent}
+.fi{position:relative;width:100%;height:100%;transition:transform .8s cubic-bezier(.3,1.3,.5,1);transform-style:preserve-3d}
+.owner.on .fi{transform:rotateY(180deg)}
+.ff,.fb{position:absolute;inset:0;border-radius:50%;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.ff{transform:rotateY(180deg);border:2px solid #0ea5b7;box-shadow:0 0 16px rgba(14,165,183,.65)}.ff img{width:100%;height:100%;object-fit:cover;display:block}
+.fb{background:linear-gradient(135deg,#2563eb,#0891b2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:26px;color:#fff;border:2px solid #fff;box-shadow:0 0 16px rgba(255,79,163,.6)}
+.fb small{font-size:8px;letter-spacing:1.5px;font-weight:700}
+.oinfo{display:flex;flex-direction:column;line-height:1.35;min-width:0}.oinfo small{font-size:10px;letter-spacing:2px;color:#0ea5b7}
+.oinfo b{font-size:18px}.od{font-size:12.5px;color:var(--mut);max-height:0;opacity:0;overflow:hidden;transition:max-height .6s,opacity .6s,margin .6s}
+.owner.on .od{max-height:70px;opacity:1;margin-top:4px}
+.owner:not(.on) .fb{animation:glowp 2s ease-in-out infinite}@keyframes glowp{50%{box-shadow:0 0 28px rgba(255,79,163,1)}}
+.steps{margin:0 0 12px;padding:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:9px 10px 9px 46px;margin:7px 0;background:var(--bg);border-radius:12px;font-size:14px;animation:up .5s both}
+.steps li:nth-child(2){animation-delay:.1s}.steps li:nth-child(3){animation-delay:.2s}.steps li:nth-child(4){animation-delay:.3s}
+.steps li::before{content:counter(s);position:absolute;left:10px;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#0ea5b7,#2563eb);color:#fff;font-weight:700;display:grid;place-items:center;font-size:14px}
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:480px){.dd{grid-template-columns:1fr}}
+.do,.dont{border-radius:14px;padding:10px 12px;font-size:13.5px}.do{background:rgba(61,255,160,.1);border:1px solid rgba(61,255,160,.4)}.dont{background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.4)}
+.dd ul{margin:6px 0 0;padding-left:18px}.dd li{margin:4px 0}
+.sel{display:flex;align-items:center;gap:10px;padding:10px 12px;margin:8px 0;border-radius:14px;background:rgba(14,165,183,.1);border:1px solid rgba(14,165,183,.55);font-size:17px;font-weight:700;animation:pop .35s both}.sel:empty{display:none}
+.chip.on{outline:2px solid #0ea5b7;box-shadow:0 0 14px rgba(14,165,183,.6)}
+.stp{background:var(--bg);border-radius:14px;padding:12px;margin-bottom:10px}
+.res{box-shadow:0 0 28px rgba(37,99,235,.45)}
+@keyframes rp{to{transform:scale(1.9);opacity:0}}@keyframes pl{50%{transform:scale(1.07)}}
+#heard{color:var(--mut);font-size:14px;margin-top:10px;min-height:20px;text-align:center}
+.item{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.item b{font-size:16px}.item small{color:var(--mut)}
+.res{border:2px solid var(--ac);animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+.kv{display:flex;justify-content:space-between;align-items:center;background:var(--bg);border-radius:12px;padding:10px 12px;margin:8px 0;gap:8px;word-break:break-all}
+.kv span.l{color:var(--mut);font-size:12px;display:block}
+.bar{height:4px;background:var(--bd);border-radius:4px;overflow:hidden;margin-top:10px}.bar i{display:block;height:100%;background:var(--ac);width:100%;transition:width 15s linear}
+.err{color:var(--bad);font-size:14px;min-height:18px}
+.top{display:flex;justify-content:space-between;align-items:center}
+
+.ftr{text-align:center;font-size:13px;color:var(--mut);padding:18px 0 6px}.ftr a{color:var(--mut);margin:0 8px;text-decoration:underline}
+#cb{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:50;max-width:520px;margin:0 auto;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;font-size:13px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+#cb .r{display:flex;gap:8px;margin-top:8px}#cb button{padding:8px 14px;font-size:13px}
+dialog.lg{width:min(560px,94vw);max-height:84vh;overflow:auto;border:1px solid var(--bd);border-radius:16px;background:var(--card);color:var(--tx);padding:20px}
+dialog.lg::backdrop{background:rgba(0,0,0,.55)}dialog.lg h2{margin:0 0 8px}dialog.lg li,dialog.lg p{font-size:14px;line-height:1.55}
+.hide{display:none!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+:root[data-theme="dark"]{--bg:#0e0d1f;--card:#1a1836;--tx:#f0eeff;--mut:#9a97c4;--bd:#2d2a57}.m2{height:6px;border-radius:9px;background:var(--bd);overflow:hidden;margin:6px 0}.m2 i{display:block;height:100%;width:0;transition:.3s}.bd2{font-size:11px;border:1px solid var(--bd);border-radius:99px;padding:1px 8px;margin-left:6px;color:var(--mut);white-space:nowrap}#setdlg select,#ptype{width:100%}
+
+.owner{position:relative;gap:16px;padding:14px 16px;border-radius:24px;background:linear-gradient(135deg,rgba(14,165,183,.10),rgba(37,99,235,.20)),color-mix(in srgb,var(--card) 78%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid transparent;box-shadow:0 10px 36px rgba(37,99,235,.25),inset 0 1px 0 rgba(255,255,255,.12);overflow:hidden;cursor:pointer;transition:transform .2s}
+.owner:active{transform:scale(.985)}
+.owner::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(120deg,#0ea5b7,#2563eb,#0891b2,#0ea5b7);background-size:300% 100%;animation:obd 6s linear infinite;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);pointer-events:none}
+.owner::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.16),transparent);transform:skewX(-20deg);animation:osh 5s ease-in-out infinite;pointer-events:none}
+@keyframes obd{to{background-position:300% 0}}@keyframes osh{0%,60%{left:-60%}100%{left:140%}}@keyframes ospin{to{transform:rotate(360deg)}}@keyframes otap{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.flip{width:84px;height:84px;outline-offset:6px}
+.flip:focus-visible{outline:2px solid #0ea5b7;border-radius:50%}
+.ring{position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(#0ea5b7,#2563eb,#0891b2,#0ea5b7);animation:ospin 4s linear infinite;-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));pointer-events:none}
+.vb{position:absolute;right:-3px;bottom:-1px;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#0ea5b7,#3b82f6);color:#fff;font-size:13px;font-weight:700;display:grid;place-items:center;border:2px solid var(--card);z-index:2}
+.fb i{font-style:normal;font-size:32px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+.fb small{font-size:8.5px;letter-spacing:1.6px;margin-top:3px}
+.oinfo small{display:flex;align-items:center;gap:6px;font-weight:600}
+.hnt{font-style:normal;display:inline-block;animation:otap 1.4s ease-in-out infinite}
+.owner.on .hnt{display:none}
+.oinfo b{font-size:22px;letter-spacing:.2px;background:linear-gradient(90deg,var(--tx),#8b5cf6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tags{display:flex;gap:6px;flex-wrap:wrap;max-height:0;opacity:0;overflow:hidden;transition:max-height .6s,opacity .6s,margin .6s}
+.owner.on .tags{max-height:40px;opacity:1;margin-top:8px}
+.tags u{text-decoration:none;font-size:11px;padding:3px 10px;border-radius:99px;border:1px solid var(--bd);background:rgba(37,99,235,.16);color:var(--tx)}
+.owner.on .od{max-height:80px}
+
+#setdlg{width:min(440px,94vw);padding:16px}.dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:18px}.dh button{padding:6px 12px}.sec{border:1px solid var(--bd);border-radius:12px;margin-top:10px;background:var(--bg)}.sec>summary{cursor:pointer;padding:12px 14px;font-weight:700;list-style:none;display:flex;justify-content:space-between}.sec>summary::after{content:"▾";color:var(--mut)}.sec[open]>summary::after{content:"▴"}.sec[open]>summary{border-bottom:1px solid var(--bd)}.sb{padding:12px 14px}
+
+#fpcard,#lang{display:none!important}
+button,.chip,.item,.ownchip{transition:transform .12s cubic-bezier(.2,.9,.3,1.3),box-shadow .12s,filter .12s}
+button:not(:disabled):active{transform:scale(.95)}
+button:not(.g):hover{filter:saturate(1.25) brightness(1.08)}
+.lk-top{display:flex;justify-content:flex-end;margin-bottom:6px}.lk-top select{width:auto;padding:6px 10px;border-radius:10px;font-size:13px}
+.ownchip{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 10px;padding:8px 14px 8px 8px;border-radius:99px;border:1px solid rgba(37,99,235,.6);background:linear-gradient(90deg,rgba(37,99,235,.28),rgba(255,45,149,.2));color:var(--tx);text-align:start}
+.ownchip img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #fff6}
+.ownchip span{flex:1;display:flex;flex-direction:column;line-height:1.15}.ownchip small{font-size:10px;letter-spacing:2px;color:#0ea5b7;font-weight:700}.ownchip b{font-size:16px}.ownchip i{font-style:normal;font-size:22px;opacity:.8}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}@keyframes glo{0%,100%{box-shadow:0 0 18px rgba(37,99,235,.6)}50%{box-shadow:0 0 30px rgba(255,45,149,.7)}}
+.abt{position:fixed;inset:0;z-index:70;overflow:auto;display:none;color:#f4f2ff;background:radial-gradient(900px 500px at 15% -10%,rgba(37,99,235,.6),transparent 60%),radial-gradient(700px 500px at 100% 10%,rgba(0,229,255,.38),transparent 55%),radial-gradient(800px 600px at 50% 110%,rgba(255,45,149,.4),transparent 60%),#07061a}
+.abt.on{display:block}.abt-in{max-width:520px;margin:0 auto;padding:calc(26px + env(safe-area-inset-top,0px)) 20px calc(30px + env(safe-area-inset-bottom,0px))}
+.abt-in>*{animation:fu .36s cubic-bezier(.2,.9,.3,1) both}.abt-in>:nth-child(2){animation-delay:.06s}.abt-in>:nth-child(3){animation-delay:.1s}.abt-in>:nth-child(4){animation-delay:.14s}.abt-in>:nth-child(5){animation-delay:.18s}.abt-in>:nth-child(6){animation-delay:.22s}.abt-in>:nth-child(7){animation-delay:.26s}
+.abt-hero{text-align:center}.abt-av{position:relative;width:112px;height:112px;margin:8px auto 16px}.abt-av img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid #fff3}
+.abt-role{display:inline-block;padding:5px 16px;border-radius:99px;background:linear-gradient(90deg,#00b8d4,#2563eb,#1d4ed8);font-weight:800;letter-spacing:2px;font-size:12px;color:#fff}
+.abt-name{font-size:36px;margin:10px 0 4px;background:linear-gradient(90deg,#fff,#7ee8ff 50%,#ff8ac9);-webkit-background-clip:text;background-clip:text;color:transparent}.abt-tag{margin:0;color:#cfc9ff}
+.abt-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.abt-stats div{text-align:center;padding:12px 6px;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)}
+.abt-stats b{display:block;font-size:26px;color:#0ea5b7}.abt-stats span{font-size:12px;color:#d7d2ff}
+.abt h3{margin:20px 0 6px;font-size:18px;color:#fff}.abt p{line-height:1.6;color:#e3e0ff}
+.abt-steps{list-style:none;padding:0;margin:8px 0 22px;display:grid;gap:10px}.abt-steps li{display:flex;gap:12px;align-items:center;padding:12px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.abt-steps li>b{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#00b8d4,#2563eb);color:#fff}.abt-steps strong{display:block;color:#fff}.abt-steps span{font-size:13.5px;color:#d7d2ff}
+#abtgo{width:100%;padding:15px;border:0;border-radius:14px;font-size:17px;font-weight:800;color:#fff;background:linear-gradient(135deg,#2563eb,#1d4ed8);animation:glo 2.2s ease-in-out infinite}
+.abt-foot{text-align:center;font-size:12px;margin-top:16px}
+html[data-theme="light"] body{background:linear-gradient(135deg,#ffc2dd,#c7d8ff 55%,#bff5d9)}
+[dir="rtl"] .lk-top{justify-content:flex-start}[dir="rtl"] .ownchip i{transform:scaleX(-1)}html[lang="ur"] body,html[lang="fa"] body{font-family:"Noto Naskh Arabic","Segoe UI",Tahoma,system-ui,sans-serif}.abt-x{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:14px;z-index:5;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.45);color:#fff;font-size:18px;padding:0}[dir="rtl"] .abt-x{right:auto;left:14px}#abtgo{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:3;box-shadow:0 8px 30px rgba(37,99,235,.55)}
+
+
+/* ===== Professional look (r10): calm blue/teal palette, light motion ===== */
+:root{--bg:#f3f6fb;--bg2:#e8eff9;--card:#ffffff;--tx:#0f1b2d;--mut:#56657c;--ac:#2563eb;--ac2:#0891b2;--bd:#d5deec;--bad:#d92d3a}
+:root:not([data-theme="light"]),:root[data-theme="dark"]{--bg:#0b1220;--bg2:#0f1a2e;--card:#131d33;--tx:#e8eef8;--mut:#93a4bd;--bd:#25324d;--ac:#4f8cff;--ac2:#22b8cf}
+html body,html[data-theme="light"] body,html[data-theme="dark"] body{background:linear-gradient(180deg,var(--bg2),var(--bg) 60%)}
+body::before{animation:none;background:radial-gradient(circle at 12% 0%,rgba(37,99,235,.10),transparent 45%),radial-gradient(circle at 92% 100%,rgba(8,145,178,.10),transparent 45%)}
+#fx{display:none!important}
+h1,.lock h1{background:linear-gradient(90deg,var(--ac),var(--ac2));background-size:100% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:none}
+.lock h1,.lock .s,.lock input,.lock .row,.lock #unlock{animation:up .35s ease both}
+.enter{animation:up .35s ease both}
+.card{border-radius:16px;box-shadow:0 1px 2px rgba(15,27,45,.05),0 10px 26px rgba(15,27,45,.07);animation:up .3s ease both}
+html[data-theme="dark"] .card,:root:not([data-theme="light"]) .card{box-shadow:0 10px 26px rgba(0,0,0,.35)}
+input,select{transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgba(37,99,235,.18)}
+button{background:linear-gradient(135deg,var(--ac),#1d4ed8);box-shadow:0 4px 12px rgba(37,99,235,.22);transition:transform .12s,filter .15s,box-shadow .15s}
+button:hover{filter:brightness(1.07)}button:active{transform:scale(.98)}
+button.g{background:var(--card);color:var(--tx);border:1px solid var(--bd);box-shadow:none}
+button.g:hover{border-color:var(--ac);filter:none}
+button.d{background:var(--bad);box-shadow:none}
+.sec{background:var(--card)}
+.lockico{animation:none}
+.hud{animation:none;color:var(--ac);text-shadow:none}
+#say{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.30);box-shadow:none}
+.chip,.tile{background:var(--card);animation:up .3s both}
+.tile:hover,.chip:hover{border-color:var(--ac)}
+.owner{background:linear-gradient(135deg,rgba(37,99,235,.07),rgba(8,145,178,.09));border:1px solid rgba(37,99,235,.28);animation:up .3s both}
+.owner::before{animation:none;background:linear-gradient(120deg,#2563eb,#0891b2);background-size:100% 100%}
+.owner::after{display:none}
+.ring{animation:none;background:conic-gradient(#2563eb,#0891b2,#2563eb)}
+.ownchip{border:1px solid rgba(37,99,235,.35);background:linear-gradient(90deg,rgba(37,99,235,.09),rgba(8,145,178,.11))}
+#abtgo{background:linear-gradient(135deg,#2563eb,#1d4ed8);animation:none;box-shadow:0 8px 20px rgba(29,78,216,.28)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><canvas id="fx" style="position:fixed;inset:0;z-index:-1;pointer-events:none"></canvas><div class="wrap">
+
+<div id="lock" class="lock"><div class="lk-top"><select id="langsel2" aria-label="Language"><option value="hx">Hinglish</option><option value="en">English</option><option value="hi">हिन्दी</option><option value="ur">اردو</option><option value="fa">فارسی</option></select></div>
+  <div class="ownslot"></div>
+  <div style="display:none" aria-hidden="true"><div class="fp" id="fp" role="button" aria-label="Fingerprint">
+    <svg aria-hidden="true" focusable="false" viewBox="0 0 120 140" width="150" height="175"><defs><linearGradient id="fpg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0ea5b7"/><stop offset="1" stop-color="#2563eb"/></linearGradient><clipPath id="fpc"><rect x="6" y="6" width="108" height="128" rx="54"/></clipPath></defs>
+    <g clip-path="url(#fpc)"><g id="ridges" fill="none" stroke="url(#fpg)" stroke-width="2.6" stroke-linecap="round"></g><rect class="beam" x="6" y="0" width="108" height="4" rx="2" fill="#0ea5b7"/></g></svg></div>
+  <div class="hud" id="fptxt" style="text-align:center;margin:0 0 10px">TOUCH TO UNLOCK</div>
+  <div class="row" style="margin:0 0 12px"><button type="button" class="g" id="fpgo">👆 Fingerprint se kholo</button><button type="button" class="g" id="pwgo">🔑 Password se kholo</button></div></div>
+  <h1>PassFast</h1>
+  <p class="s" id="lockmsg">Pehli baar hai? Ek Master Password banao. Ye yaad rakhna, ye kahin save nahi hota!</p>
+  <div id="phreg" class="hide" style="margin:10px 0"><div class="stp"><b>📱 Phone se register karo</b><p class="s" style="font-size:13px;margin:6px 0">Pehle mobile number verify karo. Phir Master Password banao. Password bhoolne par isi number ke OTP se naya password ban sakta hai.</p><div id="phbox"></div></div></div>
+  <form id="lf" autocomplete="on"><input id="vid" type="text" name="username" autocomplete="username" value="vault-owner" readonly aria-label="Vault ID" style="text-align:center;opacity:.7"><div class="row"><input id="mp" name="password" type="password" placeholder="Master Password" autocomplete="current-password"><button type="button" class="g" id="eye0" style="flex:none">👁</button></div>
+  <input id="mp2" type="password" placeholder="Master Password dobara" autocomplete="new-password">
+  <div class="err" id="err"></div>
+  <button id="unlock" style="width:100%;margin-top:6px">Khol do 🔓</button><button type="button" class="g" id="rstv" style="width:100%;margin-top:12px;font-size:13px">Master Password bhool gaye? Naya vault banao</button><button type="button" class="g" id="rcopen" style="width:100%;margin-top:8px;font-size:13px">📱 Password bhool gaye? Phone OTP se naya banao</button><div id="recpanel" class="hide" style="margin-top:10px"><div class="stp"><b>📱 Phone se recovery</b><p class="s" id="rcmsg" style="margin:6px 0;font-size:13px"></p><div id="rcbox"></div><div id="rcstep3" class="hide"><input id="rcn1" type="password" placeholder="Naya Master Password (8+, letters + numbers)" autocomplete="new-password"><input id="rcn2" type="password" placeholder="Naya password dobara" autocomplete="new-password"><button type="button" id="rcset" style="width:100%;margin-top:6px">Naya password set karo</button></div></div></div></form>
+  
+</div>
+
+<div id="app" class="hide">
+  <div class="ownslot"></div>
+  <div class="top"><div><h1>PassFast 🔐</h1><p class="s">Mic dabao aur bolo: <i>"Instagram ka password"</i></p></div>
+  <div class="row" style="flex:none;gap:6px"><button class="g" id="setbtn" aria-label="Settings" style="flex:none">⚙️</button><button class="g" id="lockbtn" style="flex:none">Lock 🔒</button></div></div>
+
+  <div class="micwrap"><div class="reactor" id="mic" role="button" aria-label="Bolo"><div class="r r1"></div><div class="r r2"></div><div class="r r3"></div><div class="core">🎤</div></div><div class="wave" id="wave"></div><div class="hud" id="hud">J.A.R.V.I.S. ONLINE · TAP KARO</div><div id="heard"></div><div id="say"></div><div class="row cmd"><input id="cmd" placeholder="Yahan likho ya keyboard ke 🎤 se bolo..." autocomplete="off"><button id="send" style="flex:none">➤</button></div><label style="font-size:13px;color:var(--mut);display:flex;gap:6px;align-items:center;margin-top:8px"><input type="checkbox" id="auto" checked style="width:auto;margin:0"> ⚡ Bolne ke baad khud bhej do (keyboard 🎤 ke liye)</label></div>
+  <div id="result"></div>
+    <div class="card">
+    <b>➕ Naya password save karo</b>
+    <div class="chips" id="chips"></div>
+    <div class="sel" id="sel"></div>
+    <select id="ptype" aria-label="Type"><option value="login">🔑 Login / Password</option><option value="card">💳 ATM / Credit card</option><option value="upi">📱 UPI</option><option value="note">📝 Secure note</option><option value="totp">🔢 2FA code</option></select>
+<input id="n" placeholder="Kiska? (ya apna naam likho)">
+    <div class="row"><input id="nick" placeholder="Voice naam (jis naam se bulaoge)"><button type="button" class="g" id="nickmic" style="flex:none">🎤</button></div>
+    <small style="color:var(--mut)">Jaise "mera pehla mail". 🎤 dabake bolo, jaisa sunega waisa hi save karega, to match pakka hoga.</small>
+    <input id="u" placeholder="Username / Email / Number" autocomplete="off"><input id="px" class="hide" placeholder="Expiry MM/YY" maxlength="5" autocomplete="off">
+    <div class="row"><input id="p" type="password" placeholder="Password" autocomplete="off"><button type="button" class="g" id="eye" style="flex:none">👁</button></div>
+    <textarea id="pnote" class="hide" rows="3" placeholder="Note likho..." style="width:100%"></textarea><div id="pgx"><div class="row" style="margin:6px 0"><button type="button" class="g" id="gen">🎲 Strong password banao</button></div><div class="m2"><i id="sm"></i></div><small id="stxt" style="color:var(--mut)"></small></div><button id="add" style="width:100%;margin-top:6px">Save karo ✅</button><button type="button" class="g hide" id="ced" style="width:100%;margin-top:6px">Cancel</button>
+  </div>
+  <div class="card"><b>🔘 Mere buttons</b><p class="s" style="margin:4px 0 10px">Button dabao, uska password aa jayega. Naya naam likhoge to uska bhi button ban jayega.</p><div class="tiles" id="tiles"></div></div>
+  <section id="about" class="abt" role="dialog" aria-modal="true" aria-label="About"><button type="button" id="abtx" class="abt-x" aria-label="Close">✕</button><div class="abt-in">
+<div class="abt-hero"><div class="abt-av"><span class="ring"></span><img id="abtimg" alt="S.K Aayan" width="112" height="112"><span class="vb" aria-hidden="true">✓</span></div><div class="abt-role">👑 ORGANISER</div><h2 class="abt-name">S.K Aayan</h2><p class="abt-tag">Ye application S.K Aayan ki hai.</p></div>
+<div class="abt-stats"><div><b>256</b><span>bit encryption</span></div><div><b>0</b><span>server</span></div><div><b>5</b><span>bhashayein</span></div></div>
+<h3>Kyun banaya?</h3><p>Har app ka alag password yaad rakhna mushkil hai. PassFast aapke saare passwords ek safe tijori me rakhta hai, aur aap bolkar ya likhkar turant nikaal sakte ho.</p>
+<h3>Kaise bana?</h3>
+<ol class="abt-steps"><li><b>1</b><div><strong>Idea</strong><span>Organiser S.K Aayan ka concept: private, tez aur bolkar chalne wali tijori.</span></div></li>
+<li><b>2</b><div><strong>Design</strong><span>Jarvis jaisa voice assistant aur neon look.</span></div></li>
+<li><b>3</b><div><strong>Security</strong><span>AES-256 encryption, Master Password se lock.</span></div></li>
+<li><b>4</b><div><strong>Launch</strong><span>Seedhi website, HTTPS par, bina kisi server ke.</span></div></li></ol>
+<button type="button" id="abtgo">Shuru karo →</button><p class="abt-foot">© 2026 PassFast · Organiser: S.K Aayan</p></div></section>
+<dialog class="lg" id="cfdlg"><p id="cfmsg" style="font-size:16px;line-height:1.5;margin:4px 0 0"></p><div class="row" style="margin-top:16px;justify-content:flex-end"><button type="button" class="g" id="cfno">Cancel</button><button type="button" id="cfyes" style="background:linear-gradient(135deg,#ff2d55,#ff6a00)">Haan, mita do</button></div></dialog>
+<dialog class="lg" id="setdlg" aria-label="Settings"><div class="dh"><b>⚙️ Settings</b><button type="button" class="g" id="setx" aria-label="Close">✕</button></div><button type="button" class="g" id="aboutbtn" style="width:100%;margin-bottom:6px">ℹ️ About aur Organiser</button>
+<div class="row" style="margin:10px 0"><select id="langsel" aria-label="Language"><option value="hx">Hinglish</option><option value="en">English</option><option value="hi">हिन्दी</option><option value="ur">اردو</option><option value="fa">فارسی</option></select><select id="thsel" aria-label="Theme"><option value="auto">🌓 Auto theme</option><option value="light">☀️ Light</option><option value="dark">🌙 Dark</option></select></div>
+<label style="font-size:13px;color:var(--mut)">⏱ Auto-lock</label><select id="alsel"><option value="1">1 minute</option><option value="5">5 minute</option><option value="15">15 minute</option></select>
+<label style="display:flex;gap:8px;align-items:center;margin:10px 0;font-size:14px"><input type="checkbox" id="wipe" style="width:auto;margin:0"> 10 galat tries ke baad vault mita do</label>
+
+<details class="sec" id="micsec"><summary>🎙️ Mic aur Awaaz</summary><div class="sb"><details class="sec"><summary>🩺 Mic check</summary><div class="sb"><p class="s" style="margin:6px 0 10px">Mic sun nahi raha? Ye dabao, ye batayega dikkat kahan hai.</p>
+    <button id="diag" style="width:100%">Mic check karo 🔍</button><div id="dout" style="margin-top:10px;font-size:14px;line-height:1.7"></div><div class="meter"><i id="mlev"></i></div></div></details><details class="sec"><summary>🔊 Awaaz settings</summary><div class="sb">
+    <label style="display:flex;gap:8px;align-items:center;margin:10px 0;font-size:14px"><input type="checkbox" id="tson" style="width:auto;margin:0"> Jarvis bol ke jawab de</label>
+    <small style="color:var(--mut)">Speed</small><input type="range" id="trate" min=".6" max="1.5" step=".1">
+    <small style="color:var(--mut)">Pitch</small><input type="range" id="tpitch" min=".6" max="1.6" step=".1">
+    <select id="tvoice"></select><button type="button" class="g" id="ttest" style="width:100%">Test karo 🔈</button></div></details><details class="sec"><summary>⚙️ Mic settings</summary><div class="sb">
+    <div class="row"><input id="aname" placeholder="Mic ka naam (jaise Jarvis, Friday)"><button type="button" class="g" id="anamemic" style="flex:none">🎤</button></div>
+    <label style="display:flex;gap:8px;align-items:center;margin:8px 0;font-size:14px"><input type="checkbox" id="req" style="width:auto;margin:0"> Pehle mic ka naam bolna zaroori ho</label>
+    <label style="display:flex;gap:8px;align-items:center;margin:8px 0;font-size:14px"><input type="checkbox" id="aion" checked style="width:auto;margin:0"> 🤖 Jarvis se khuli baatcheet (AI, internet se)</label><button type="button" class="g" id="lang" style="width:100%"></button>
+    <button type="button" class="g" id="always" style="width:100%;margin-top:8px"></button>
+    <small style="color:var(--mut)">"Hamesha sunna" ON karo to Jarvis ki tarah baat-cheet chalti rahegi. Is mode me upar wala naam-tick laga lo, taaki wo sirf tumhari baat sune.</small></div></details></div></details><details class="sec" id="recsec"><summary>📱 Phone Recovery (Password bhool jaao to)</summary><div class="sb"><p class="s" style="margin:0 0 8px;font-size:13px">Phone number se OTP lekar recovery ON karo. Phir Master Password bhoolne par isi number ke OTP se naya password ban jayega aur data wahi rahega.</p><p class="s" id="recst" style="margin:6px 0;font-size:13px"></p><div id="recbox"></div><button type="button" id="recoff" class="g hide" style="width:100%;margin-top:6px">Recovery band karo</button></div></details><details class="sec"><summary>💾 Backup aur Restore</summary><div class="sb">
+<p class="s" style="margin:6px 0 8px;font-size:13px">Backup file encrypted hoti hai. Isse kholne ke liye wahi Master Password chahiye jo backup ke waqt tha.</p>
+<button type="button" id="bkx" style="width:100%">⬇️ Backup file banao</button>
+<p class="s" id="bkl" style="margin:8px 0;font-size:13px"></p>
+<textarea id="bkt" rows="3" placeholder="Backup text yahan aayega / restore ke liye yahan paste karo" style="width:100%"></textarea>
+<div class="row" style="margin-top:6px"><button type="button" class="g" id="bkc">📋 Text copy karo</button><button type="button" class="g" id="bkf">📂 File se restore</button></div>
+<input type="file" id="bkfile" accept=".json,application/json,text/plain" class="hide">
+<input id="bkpw" type="password" placeholder="Backup wala Master Password" autocomplete="off" style="margin-top:6px">
+<button type="button" id="bki" style="width:100%;margin-top:6px">Restore karo (vault me jodo)</button>
+<p class="s" id="bkm" style="margin:8px 0 0;font-size:13px"></p></div></details><details class="sec"><summary>🔑 Master Password badlo</summary><div class="sb"><input id="cpo" type="password" placeholder="Purana password" autocomplete="off"><input id="cpn" type="password" placeholder="Naya password (8+, letters + numbers)" autocomplete="off"><input id="cpn2" type="password" placeholder="Naya password dobara" autocomplete="off"><label style="display:flex;gap:8px;align-items:center;margin:10px 0 6px;font-size:14px"><input type="checkbox" id="cpmail" style="width:auto;margin:0">Password badalne se pehle email code zaroori ho</label>
+<div id="mailbox" class="hide"><div class="row" style="margin:6px 0"><button type="button" class="g" id="mailsend">📨 Code bhejo</button><input id="mailcode" inputmode="numeric" maxlength="6" placeholder="Email ka 6 ank wala code" autocomplete="one-time-code" style="flex:1;min-width:140px"><button type="button" id="mailok">✔️ Verify karo</button></div><p class="s" id="mailmsg" style="margin:4px 0 8px;font-size:13px"></p></div>
+<button id="cpbtn" style="width:100%;margin-top:6px">Password badlo</button><p class="s" id="cpm" style="margin:8px 0 0;font-size:13px"></p></div></details><details class="sec" id="fpcard"><summary>🔐 Fingerprint Setup</summary><div class="sb">
+    <p class="s" style="margin:6px 0 12px">Ek baar set karo. Fir har baar vault <b>fingerprint ya password</b>, dono me se kisi se bhi khulega.</p>
+    <div class="stp"><b>Tarika 1: Phone Passkey Fingerprint</b><p class="s" id="fpst" style="margin:6px 0 8px;font-size:13px"></p><button id="fpbtn" style="width:100%"></button></div>
+    <div class="stp"><b>Tarika 2: Chrome Fingerprint (sabse pakka)</b><p class="s" style="margin:6px 0 8px;font-size:13px">Master Password dobara daalo, main Chrome ko save karne bolta hoon. Fir fingerprint se hi bhar jayega.</p>
+      <input id="fpmp" type="password" placeholder="Master Password" autocomplete="off"><button id="fpchrome" style="width:100%;margin-top:6px">Chrome me set karo 🔑</button><p class="s" id="fpst2" style="margin:8px 0 6px;font-size:13px"></p>
+      <small style="color:var(--mut)">Phir Chrome ⋮ → Settings → Password Manager → Settings → <b>"Use screen lock when filling passwords"</b> ON karo.</small></div>
+    <small style="color:var(--mut)">Master Password hamesha backup hai, bhoolna mat.</small></div></details></dialog>
+          
+
+  <div class="card"><b>📋 Saved accounts <span id="cnt"></span></b><input id="q" placeholder="Search karo...">
+    <div id="list"></div></div>
+  <p class="s" style="text-align:center">Sab data tere phone/browser me encrypted (AES-256) save hota hai. Kisi server pe nahi jaata. Browser data clear kiya toh vault bhi jayega.</p>
+</div>
+
+</div><div class="ftr">© 2026 PassFast · <a href="#privacy">Privacy Policy</a> · <a href="#terms">Terms &amp; Conditions</a> · <span style="opacity:.5">r11</span></div>
+<dialog class="lg" id="privacy"><h2>Privacy Policy</h2><ul><li>Aapka data sirf aapke phone me, encrypted rehta hai.</li><li>PassFast koi data apne server par nahi bhejta.</li><li>Master Password kahin save nahi hota aur recover nahi ho sakta.</li><li>Hum cookies nahi use karte, sirf localStorage use hota hai.</li><li>Voice sunne ke liye browser apni speech service use kar sakta hai.</li><li>Register/recovery ke liye aapka mobile number SMS OTP bhejne ke liye hamare server aur SMS provider (Twilio) se hokar jata hai. Number hum store nahi karte, aur aapke passwords server par kabhi nahi jaate.</li><li>Recovery ke liye vault ki ek encrypted copy sirf aapke phone me rakhi jati hai. Use kholne ki chabi sirf us mobile number ke OTP se milti hai.</li><li>OTP sirf aapke diye mobile number par SMS se aata hai aur 10 minute me expire ho jata hai.</li><li>Recovery chalu kiye bina Master Password bhoolne par data wapas nahi aa sakta.</li><li>Jarvis AI baatcheet ON ho to jo sawal aap Jarvis se poochte ho (sirf wo text) hamare server ke raaste AI service (Anthropic) tak jata hai. Passwords, usernames aur account ke naam kabhi nahi bheje jate. Settings me ise band kar sakte ho.</li></ul><form method="dialog"><button>Band karo</button></form></dialog>
+<dialog class="lg" id="terms"><h2>Terms & Conditions</h2><ul><li>PassFast personal use ke liye hai.</li><li>Bank PIN aur OTP yahan mat rakho.</li><li>Master Password bhoolne ya data clear hone par data wapas nahi milta.</li><li>Service jaisi hai waisi di jaati hai, bina guarantee ke.</li><li>Kisi aur ka password bina ijazat save karna mana hai.</li><li>Phone Recovery Master Password bhoolne se pehle ON honi chahiye (naye vault me register ke time apne aap ON ho jati hai).</li><li>Jo mobile number recovery ke liye use hua, uski suraksha aapki zimmedari hai. Jiske paas us number ke SMS ka access hoga wo recovery kar sakta hai.</li><li>Recovery copy sirf isi browser/phone me hoti hai. Browser data clear hone par wo bhi mit jati hai, isliye Backup bhi rakho.</li><li>Jarvis ke AI jawab galat ho sakte hain. Zaroori baton ke liye khud check karo.</li></ul><form method="dialog"><button>Band karo</button></form></dialog>
+<div id="cb" class="hide" role="dialog" aria-label="Cookie notice"><b>🍪 Cookies nahi, sirf localStorage.</b> Vault aapke device me rehta hai. Anonymous analytics (agar owner ne ON kiya ho) ke liye aapki ijazat chahiye. <a href="#privacy" style="color:var(--ac)">Privacy Policy</a><div class="r"><button id="cby">Haan, theek hai</button><button id="cbn" class="g">Nahi</button></div></div>
+<script>/* PassFast main app: vault, encryption, voice, UI logic */
+const $=id=>document.getElementById(id),enc=new TextEncoder(),dec=new TextDecoder();
+let key=null,vault=[],salt=null,timer=null;
+const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b))),ub=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const mem={};
+async function derive(pw,s){const m=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveKey']);
+ return crypto.subtle.deriveKey({name:'PBKDF2',salt:s,iterations:250000,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function save(){const iv=crypto.getRandomValues(new Uint8Array(12));
+ const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc.encode(JSON.stringify(vault)));
+ const d=JSON.stringify({s:b64(salt),iv:b64(iv),ct:b64(ct)});mem.v=d;store.set('vault_v1',d)}
+const raw=()=>store.get('vault_v1')||mem.v;
+const first=!raw();
+if(!first){$('lockmsg').textContent='Welcome back! Master Password daalo.';$('mp2').classList.add('hide')}
+$('unlock').onclick=async()=>{
+ const pw=$('mp').value;$('err').textContent='';
+ const _w=Math.ceil(((window.__lu||0)-Date.now())/1000);if(_w>0){$('err').textContent='Bahut galat try. '+_w+' second ruko.';return}
+ if(pw.length<6){$('err').textContent='Kam se kam 6 character rakho.';return}
+ try{
+  if(first){if(pw.length<8||!/[A-Za-z]/.test(pw)||!/[0-9]/.test(pw)){$('err').textContent='Naya Master Password: 8+ akshar, letters aur numbers dono.';return}if(pw!==$('mp2').value){$('err').textContent='Dono password match nahi hue.';return}
+   salt=crypto.getRandomValues(new Uint8Array(16));key=await derive(pw,salt);vault=[];await save()}
+  else{const d=JSON.parse(raw());salt=ub(d.s);key=await derive(pw,salt);
+   vault=JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(d.iv)},key,ub(d.ct))))}
+  try{if(window.PasswordCredential&&!first)navigator.credentials.store(new PasswordCredential({id:'vault-owner',password:pw,name:'PassFast'})).catch(()=>{})}catch(e){}$('fp').classList.add('ok');$('fptxt').textContent='ACCESS GRANTED ✓';$('lockmsg').textContent='Access mil gaya ✅';await new Promise(r=>setTimeout(r,900));$('lock').classList.add('hide');$('app').classList.remove('hide');$('app').classList.add('enter');render();store.set('pf_f','0');window.__f=0;window.fpAsk&&fpAsk();
+ }catch(e){window.__f=(+store.get('pf_f')||0)+1;store.set('pf_f',String(window.__f));if(store.get('pf_wipe')==='1'){if(window.__f>=10){window.wipeVault&&wipeVault();return}setTimeout(()=>{$('err').textContent+=' ⚠️ '+(10-window.__f)+' try bache, phir vault mit jayega.'},0)}if(window.__f>=5)window.__lu=Date.now()+Math.min(300,5*2**(window.__f-5))*1000;$('err').textContent='Galat Master Password ❌';$('fptxt').textContent='ACCESS DENIED';$('fp').classList.add('bad');setTimeout(()=>{$('fp').classList.remove('bad');$('fptxt').textContent='TOUCH TO UNLOCK'},900)}
+};
+$('mp').onkeydown=e=>{if(e.key==='Enter'&&!$('mp2').offsetParent)$('unlock').click()};
+$('lockbtn').onclick=()=>location.reload();
+
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+const BR=[
+[/gmail|google|mail/i,'<rect width="48" height="48" rx="11" fill="#fff"/><path d="M7 38V18l7 5.300V38z" fill="#4285f4"/><path d="M41 38V18l-7 5.300V38z" fill="#34a853"/><path d="M7 18l17 13 17-13-2.500-4.500L24 22 9.500 13.500z" fill="#ea4335"/><path d="M41 18v-4.500l-2.500.0z" fill="#fbbc04"/>'],
+[/insta/i,'<defs><linearGradient id="igg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#feda75"/><stop offset=".35" stop-color="#fa7e1e"/><stop offset=".6" stop-color="#d62976"/><stop offset=".8" stop-color="#962fbf"/><stop offset="1" stop-color="#4f5bd5"/></linearGradient></defs><rect width="48" height="48" rx="13" fill="url(#igg)"/><rect x="11" y="11" width="26" height="26" rx="8" fill="none" stroke="#fff" stroke-width="3"/><circle cx="24" cy="24" r="6.500" fill="none" stroke="#fff" stroke-width="3"/><circle cx="32.500" cy="15.500" r="2" fill="#fff"/>'],
+[/facebook|^fb$/i,'<circle cx="24" cy="24" r="24" fill="#1877f2"/><path d="M26.500 46V28.500h5l.9-6h-5.900v-3.800c0-1.700.8-3 3.200-3H32V10.600c-.5-.1-2.400-.3-4.400-.3-4.600 0-7.500 2.700-7.500 7.600v4.600H15v6h5.100V46z" fill="#fff"/>'],
+[/whats|watsapp/i,'<circle cx="24" cy="24" r="24" fill="#25d366"/><path d="M24 10a14 14 0 0 0-12 21.200L10 38l7-1.900A14 14 0 1 0 24 10z" fill="none" stroke="#fff" stroke-width="3"/><path d="M19 17c-.6 0-1.300.3-1.800 1-.7 1-1 2.500.5 4.800 1.700 2.700 4.400 5.400 7.600 6.200 1.900.5 3.500-.3 4.200-1.600.2-.6.1-1-.2-1.100l-2.800-1.400c-.4-.2-.8-.1-1 .3l-1 1.100c-1.900-.7-3.900-2.600-4.700-4.500l1-1c.3-.3.4-.7.2-1l-1.300-2.800c-.2-.3-.5-.2-.7-.2z" fill="#fff"/>'],
+[/snap/i,'<rect width="48" height="48" rx="11" fill="#fffc00"/><path d="M24 9c-5 0-8 3.500-8 8v4c-1 .5-3 .6-3 1.600 0 1.500 3 1.800 3 2.800-.5 2-3 3.500-5 4 0 1.200 3 1.500 4.500 2.200.5 1 .5 2 2 2 1.500 0 3-1 5.500-1s4 1 5.500 1c1.500 0 1.500-1 2-2 1.500-.7 4.500-1 4.500-2.200-2-.5-4.500-2-5-4 0-1 3-1.300 3-2.800 0-1-2-1.100-3-1.600v-4c0-4.500-3-8-8-8z" fill="#fff" stroke="#111" stroke-width="2" stroke-linejoin="round"/>'],
+[/twitter|^x$|^x\b/i,'<rect width="48" height="48" rx="11" fill="#000"/><path d="M12 11l24 26M36 11L12 37" stroke="#fff" stroke-width="4" stroke-linecap="round"/>'],
+[/youtube|^yt$/i,'<rect y="9" width="48" height="30" rx="9" fill="#f00"/><path d="M20 17v14l12-7z" fill="#fff"/>'],
+[/linkedin/i,'<rect width="48" height="48" rx="9" fill="#0a66c2"/><rect x="9" y="19" width="6" height="20" fill="#fff"/><circle cx="12" cy="12.500" r="3.500" fill="#fff"/><path d="M20 19h5.500v2.800c.9-1.700 3-3.200 5.800-3.200 5.200 0 6.700 3.300 6.700 8V39h-6V28c0-2.300-.5-4-2.800-4-2.700 0-3.700 1.900-3.700 4.400V39h-5.500z" fill="#fff"/>'],
+[/telegram/i,'<circle cx="24" cy="24" r="24" fill="#29a9eb"/><path d="M10 23.500l25-10c1.200-.4 2.200.3 1.800 2l-4.300 20.300c-.3 1.400-1.200 1.800-2.300 1.100l-6.500-4.800-3.100 3c-.3.300-.7.600-1.300.6l.5-6.600 12-10.900c.5-.5-.1-.7-.8-.3L16.500 27.600l-6.400-2c-1.400-.4-1.400-1.400.1-2.100z" fill="#fff"/>'],
+[/netflix/i,'<rect width="48" height="48" rx="10" fill="#111"/><path d="M15 9h6v30h-6zM27 9h6v30h-6z" fill="#b20710"/><path d="M15 9h6l12 30h-6z" fill="#e50914"/>'],
+[/amazon/i,'<rect width="48" height="48" rx="11" fill="#232f3e"/><text x="24" y="28" font-size="26" font-weight="700" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">a</text><path d="M11 34c8 5 19 5 26 0" stroke="#ff9900" stroke-width="3" fill="none" stroke-linecap="round"/>'],
+[/flipkart/i,'<rect width="48" height="48" rx="11" fill="#2874f0"/><text x="24" y="35" font-size="30" font-weight="800" text-anchor="middle" fill="#ffe500" font-family="Arial,sans-serif">f</text>'],
+[/paytm/i,'<rect width="48" height="48" rx="11" fill="#fff" stroke="#ddd"/><text x="24" y="28" text-anchor="middle" font-size="14" font-weight="800" font-family="Arial,sans-serif"><tspan fill="#002e6e">pay</tspan><tspan fill="#00baf2">tm</tspan></text>'],
+[/phone ?pe/i,'<circle cx="24" cy="24" r="24" fill="#5f259f"/><text x="24" y="33" font-size="26" font-weight="700" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">₹</text>'],
+[/swiggy/i,'<rect width="48" height="48" rx="11" fill="#fc8019"/><text x="24" y="34" font-size="28" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">S</text>'],
+[/zomato/i,'<rect width="48" height="48" rx="11" fill="#e23744"/><text x="24" y="33" font-size="26" font-weight="800" font-style="italic" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">zomato</text>'],
+[/spotify/i,'<circle cx="24" cy="24" r="24" fill="#1ed760"/><path d="M12 18c8-3 18-2 25 2M14 25c7-2.500 15-1.500 21 2M16 32c6-2 12-1.200 17 1.500" stroke="#000" stroke-width="3.500" fill="none" stroke-linecap="round"/>'],
+[/github/i,'<circle cx="24" cy="24" r="24" fill="#181717"/><path fill="#fff" d="M24 8C15.200 8 8 15.200 8 24c0 7.100 4.600 13.100 10.900 15.200.8.100 1.100-.3 1.100-.8v-2.800c-4.400 1-5.400-2.100-5.400-2.100-.7-1.800-1.800-2.300-1.800-2.300-1.400-1 .1-1 .1-1 1.600.1 2.400 1.600 2.400 1.600 1.400 2.400 3.700 1.700 4.600 1.300.1-1 .6-1.700 1-2.100-3.500-.4-7.200-1.800-7.200-7.900 0-1.700.6-3.100 1.600-4.200-.2-.4-.7-2 .2-4.200 0 0 1.300-.4 4.300 1.600a14.800 14.800 0 0 1 7.800 0c3-2 4.300-1.600 4.300-1.600.9 2.200.3 3.800.2 4.200 1 1.100 1.600 2.500 1.600 4.200 0 6.100-3.700 7.500-7.200 7.900.6.500 1.100 1.500 1.100 3v4.400c0 .4.300.9 1.100.8C35.400 37.100 40 31.100 40 24c0-8.800-7.200-16-16-16z"/>'],
+[/bank|sbi|hdfc|icici|axis/i,'<rect width="48" height="48" rx="11" fill="#1e3a8a"/><path d="M24 9L9 17v3h30v-3zM12 22v12h4V22zM20 22v12h4V22zM28 22v12h4V22zM34 22v12h2V22zM9 36v3h30v-3z" fill="#fff"/>'],
+[/aadhaar|aadhar|govt/i,'<rect width="48" height="48" rx="11" fill="#fff" stroke="#ddd"/><rect x="0" y="0" width="48" height="12" rx="11" fill="#ff9933"/><rect x="0" y="36" width="48" height="12" rx="11" fill="#138808"/><circle cx="24" cy="24" r="8" fill="none" stroke="#000080" stroke-width="2.500"/>']
+];
+function icon(n,sz){let inner=null;for(const [re,svg] of BR){if(re.test(n)){inner=svg;break}}
+ if(!inner){let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))%360;inner=`<rect width="48" height="48" rx="12" fill="hsl(${h},70%,48%)"/><text x="24" y="33" font-size="26" font-weight="700" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">${esc((n[0]||'?').toUpperCase())}</text>`}
+ return `<svg viewBox="0 0 48 48" width="${sz}" height="${sz}" aria-hidden="true" style="flex:none">${inner}</svg>`}
+const SITES=[['Gmail','📧'],['Instagram','📸'],['Facebook','👍'],['WhatsApp','💬'],['Twitter/X','🐦'],['YouTube','▶️'],['LinkedIn','💼'],['Snapchat','👻'],['Telegram','✈️'],['Netflix','🎬'],['Amazon','📦'],['Flipkart','🛒'],['Paytm','💳'],['PhonePe','📱'],['Swiggy','🍔'],['Zomato','🍕'],['Spotify','🎵'],['GitHub','🐙'],['Bank','🏦'],['Aadhaar/Govt','🪪']];
+$('chips').innerHTML=SITES.map(([n],k)=>`<button type="button" class="chip" style="animation-delay:${k*.03}s" data-a="pick" data-v="${n}">${icon(n,22)} ${n}</button>`).join('');
+function pick(n){$('n').value=n;$('u').focus()}
+function ic(n){return icon(n,22)+' '}
+function render(){const f=$('q').value.toLowerCase();$('cnt').textContent='('+vault.length+')';
+ $('tiles').innerHTML=vault.map((v,i)=>`<button type="button" class="tile" style="animation-delay:${i*.04}s" data-a="show" data-v="${i}">${icon(v.n,40)}<span>${esc(v.n)}</span></button>`).join('')||'<p class="s">Abhi koi button nahi. Neeche se password save karo.</p>';
+ $('list').innerHTML=vault.map((v,i)=>({v,i})).filter(o=>o.v.n.toLowerCase().includes(f)).map(({v,i})=>
+ `<div class="kv item" style="animation:up .4s ease both;animation-delay:${i*.05}s"><div><b style="display:flex;align-items:center;gap:8px">${icon(v.n,24)} ${esc(v.n)}</b><br><small>${esc(v.u)}${v.nick?' · 🗣️ '+esc(v.nick):''}</small></div>
+ <div class="row" style="flex:none"><button class="g" data-a="show" data-v="${i}">Dekho</button><button class="d" data-a="del" data-v="${i}">🗑 Delete</button></div></div>`).join('')||'<p class="s">Abhi kuch save nahi hai.</p>'}
+$('q').oninput=render;
+$('add').onclick=async()=>{const n=$('n').value.trim(),u=$('u').value.trim(),p=$('p').value;
+ if(!n||!p)return;vault.push({n,u,p,nick:$('nick').value.trim()});await save();['n','u','p','nick'].forEach(x=>$(x).value='');render();updSel()};
+async function del(i){const nm=vault[i]?vault[i].n:'';vault.splice(i,1);await save();clearTimeout(timer);$('result').innerHTML='';$('heard').textContent='🗑 '+nm+' delete ho gaya';render()}
+
+function show(i){const v=vault[i];clearTimeout(timer);
+ $('result').innerHTML=`<div class="card res"><b>✨ ${esc(v.n)}</b>
+ <div class="kv"><div><span class="l">Username</span>${esc(v.u||'-')}</div><button class="g" data-a="cp" data-v="${i}" data-k="u">Copy</button></div>
+ <div class="kv"><div><span class="l">Password</span>${esc(v.p)}</div><button class="g" data-a="cp" data-v="${i}" data-k="p">Copy</button></div>
+ <button type="button" class="d" style="width:100%;margin-top:6px" data-a="del" data-v="${i}">🗑 Delete / Unsave karo</button><div class="bar"><i id="bar"></i></div><small style="color:var(--mut)">15 second me chhup jayega</small></div>`;
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=$('bar');if(b)b.style.width='0'}));
+ timer=setTimeout(()=>$('result').innerHTML='',15000);$('result').scrollIntoView({behavior:'smooth'})}
+async function cp(i,k){try{await navigator.clipboard.writeText(vault[i][k]);$('heard').textContent='Copy ho gaya ✅'}catch(e){$('heard').textContent='Copy nahi hua, manually select karo.'}}
+
+const alias={instagram:['इंस्टाग्राम','इंस्टा','insta','instagram'],gmail:['जीमेल','जी मेल','gmail','google','गूगल','email','ईमेल'],
+ whatsapp:['व्हाट्सएप','व्हाट्सऐप','वॉट्सएप','वाट्सएप','व्हाट्स','whatsapp','whats app'],facebook:['फेसबुक','फेस बुक','facebook','fb'],
+ twitter:['ट्विटर','twitter'],telegram:['टेलीग्राम','telegram'],flipkart:['फ्लिपकार्ट','flipkart'],spotify:['स्पॉटिफाई','spotify'],zomato:['ज़ोमैटो','जोमैटो','zomato'],swiggy:['स्विगी','swiggy'],phonepe:['फोनपे','phonepe'],github:['गिटहब','github'],bank:['बैंक','bank'],youtube:['यूट्यूब','youtube'],linkedin:['लिंक्डइन','linkedin'],paytm:['पेटीएम','paytm'],amazon:['अमेज़न','अमेजन','amazon'],netflix:['नेटफ्लिक्स','netflix'],snapchat:['स्नैपचैट','snapchat']};
+function norm(s){s=s.toLowerCase();for(const k in alias)for(const a of alias[k])if(s.includes(a.toLowerCase()))s+=' '+k;return s}
+function findBy(t){const T=norm(t);const hits=[];
+ vault.forEach((v,i)=>{const n=norm(v.n);let sc=0;const nk=(v.nick||'').toLowerCase().trim();if(nk&&T.includes(nk))sc=5;
+  if(sc){}else if(T.includes(v.n.toLowerCase()))sc=2;
+  else for(const k in alias)if(T.includes(k)&&n.includes(k))sc=2;
+  if(sc&&v.u&&T.includes(v.u.toLowerCase()))sc=Math.max(sc,3);if(sc)hits.push([sc,i])});
+ hits.sort((a,b)=>b[0]-a[0]);const top=hits.length?hits[0][0]:0;return (top===5?hits.filter(h=>h[0]===5):hits).map(h=>h[1])}
+
+let LANG=store.get('lang')||'hi-IN',AN=store.get('aname')||'J.A.R.V.I.S.';
+function hudIdle(){$('hud').textContent=AN.toUpperCase()+' ONLINE · TAP KARO'}
+function langTxt(){$('lang').textContent='🌐 Bhasha: '+(LANG==='hi-IN'?'हिंदी (Hindi)':'English / Hinglish')+' (badalne ke liye tap)'}
+$('aname').value=store.get('aname')||'';$('req').checked=store.get('req')==='1';hudIdle();langTxt();
+$('aname').oninput=()=>{const v=$('aname').value.trim();AN=v||'J.A.R.V.I.S.';store.set('aname',v);hudIdle()};
+$('req').onchange=()=>store.set('req',$('req').checked?'1':'0');
+$('lang').onclick=()=>{LANG=LANG==='hi-IN'?'en-IN':'hi-IN';store.set('lang',LANG);langTxt()};
+function listenOnce(btn,cb){if(!SR){$('heard').textContent='Is browser me voice support nahi hai.';return}
+ const r=new SR();r.lang=LANG;r.onstart=()=>{btn.textContent='🎧';$('heard').textContent='Naam bolo...'};
+ r.onresult=e=>cb(e.results[0][0].transcript.trim());
+ r.onerror=e=>{$('heard').textContent=e.error==='not-allowed'?'Mic blocked hai. Chrome ke alag tab me kholo aur Allow karo':'Dikkat: '+e.error};
+ r.onend=()=>{btn.textContent='🎤'};try{r.start()}catch(e){}}
+$('nickmic').onclick=()=>listenOnce($('nickmic'),t=>{$('nick').value=t;$('heard').textContent='Voice naam: "'+t+'" ✅'});
+$('anamemic').onclick=()=>listenOnce($('anamemic'),t=>{$('aname').value=t;$('aname').oninput();$('heard').textContent='Mic ka naam: "'+t+'" ✅'});
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null,always=false,busy=false,hist=[],samp;
+async function getSamp(){if(samp!==undefined)return samp;try{samp=window.claude?await window.claude.use('sample'):null}catch(e){samp=null}return samp}
+let aiDead=false,aiHist=[];const aiOn=()=>store.get('pf_ai')!=='0';
+async function aiAsk(t){if(aiDead||!aiOn()||navigator.onLine===false)return null;const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),12000);
+ try{const r=await fetch('/api/jarvis',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t,hist:aiHist,lang:LANG,name:AN}),signal:ac.signal});
+  if(r.status===404||r.status===503){aiDead=true;return null}if(!r.ok)return null;
+  const j=await r.json(),a=String(j.reply||'').trim();if(!a)return null;aiHist.push({u:t,a:a});aiHist=aiHist.slice(-6);return a}catch(e){return null}finally{clearTimeout(tm)}}
+try{$('aion').checked=aiOn();$('aion').onchange=()=>store.set('pf_ai',$('aion').checked?'1':'0')}catch(e){}
+function updAlways(){$('always').textContent=always?'🟢 Hamesha sun raha hoon (band karne ko tap)':'⚪ Hamesha sunna: band (chalane ko tap)'}updAlways();
+const TTS=Object.assign({on:true,rate:1,pitch:1,voice:''},(()=>{try{return JSON.parse(store.get('tts')||'{}')}catch(e){return {}}})());
+const saveTTS=()=>store.set('tts',JSON.stringify(TTS));
+function fillVoices(){try{const vs=speechSynthesis.getVoices().filter(v=>/^(hi|en-IN)/i.test(v.lang));$('tvoice').innerHTML='<option value="">Auto voice</option>'+vs.map(v=>`<option value="${esc(v.name)}"${v.name===TTS.voice?' selected':''}>${esc(v.name)} (${v.lang})</option>`).join('')}catch(e){}}
+try{speechSynthesis.onvoiceschanged=fillVoices}catch(e){}fillVoices();
+$('tson').checked=TTS.on;$('trate').value=TTS.rate;$('tpitch').value=TTS.pitch;
+$('tson').onchange=()=>{TTS.on=$('tson').checked;saveTTS()};$('trate').oninput=()=>{TTS.rate=+$('trate').value;saveTTS()};
+$('tpitch').oninput=()=>{TTS.pitch=+$('tpitch').value;saveTTS()};$('tvoice').onchange=()=>{TTS.voice=$('tvoice').value;saveTTS()};
+$('ttest').onclick=()=>{const o=TTS.on;TTS.on=true;speak(LANG==='hi-IN'?'नमस्ते, मैं '+AN+' हूँ। बताइए, क्या करना है?':'Hello, main '+AN+' hoon. Bataiye kya karna hai?',()=>{TTS.on=o})};
+$('wave').innerHTML=Array.from({length:26},(_,k)=>`<i style="animation-delay:${(k%7)*.08}s"></i>`).join('');
+$('send').onclick=()=>{getSamp();const t=$('cmd').value.trim();if(!t||busy)return;$('cmd').value='';$('heard').textContent='"'+t+'"';handle(t,true)};
+$('cmd').onkeydown=e=>{if(e.key==='Enter')$('send').click()};
+$('diag').onclick=async()=>{const o=[],ok=(b,t)=>o.push((b?'✅ ':'❌ ')+t);
+ ok(isSecureContext,'Secure page (https)');ok(!!SR,'Voice sunne ki suvidha is browser me');
+ let pol=true;try{const fp=document.featurePolicy||document.permissionsPolicy;if(fp&&fp.allowsFeature)pol=fp.allowsFeature('microphone')}catch(e){}
+ ok(pol,'Is page ko mic ki ijazat (Claude ke frame se)');
+ try{if(navigator.permissions){const st=await navigator.permissions.query({name:'microphone'});ok(st.state!=='denied','Browser mic permission: '+st.state)}}catch(e){}
+ let stream=null;
+ try{stream=await navigator.mediaDevices.getUserMedia({audio:true});ok(true,'Mic khul gaya! Ab bolo, neeche bar hilni chahiye 🎙️')}catch(e){ok(false,'Mic nahi khula: '+(e.name||e.message))}
+ $('dout').innerHTML=o.join('<br>');
+ if(stream){const ac=new (window.AudioContext||window.webkitAudioContext)(),an=ac.createAnalyser();an.fftSize=256;ac.createMediaStreamSource(stream).connect(an);
+  const d=new Uint8Array(an.frequencyBinCount),t0=Date.now();(function lp(){an.getByteFrequencyData(d);const v=d.reduce((a,b)=>a+b,0)/d.length;$('mlev').style.width=Math.min(100,v*2.2)+'%';
+   if(Date.now()-t0<8000)requestAnimationFrame(lp);else{stream.getTracks().forEach(t=>t.stop());ac.close();$('mlev').style.width='0'}})()}
+ else $('dout').innerHTML+='<br><br>👉 <b>Kya karein:</b><br>1) Chrome address bar ke 🔒 icon pe Mic = Allow.<br>2) Phone Settings → Apps → Chrome → Permissions → Microphone → Allow.<br>3) Agar "page ko mic ki ijazat" ❌ hai, to Claude ne is page ko aise frame me khola hai jahan mic band hai. Tab tak <b>upar wale box me likho ya keyboard ke 🎤 se bolo</b>, wo poora kaam karta hai.'};
+(function(){const c=$('fx'),x=c.getContext('2d');let W,H,P=[];function rs(){W=c.width=innerWidth;H=c.height=innerHeight}rs();addEventListener('resize',rs);
+ for(let i=0;i<45;i++)P.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2+.6,v:Math.random()*.5+.15,h:[185,270,320][i%3]});
+ (function f(){x.clearRect(0,0,W,H);for(const p of P){p.y-=p.v;if(p.y<-5){p.y=H+5;p.x=Math.random()*W}x.beginPath();x.fillStyle='hsla('+p.h+',100%,65%,.55)';x.shadowBlur=10;x.shadowColor='hsl('+p.h+',100%,65%)';x.arc(p.x,p.y,p.r,0,7);x.fill()}requestAnimationFrame(f)})()})();
+function speak(t,cb){let done=false;const fin=()=>{if(done)return;done=true;$('wave').classList.remove('sp');hudIdle();cb&&cb()};
+ if(!TTS.on)return fin();
+ try{if(!('speechSynthesis' in window)){$('hud').textContent='🔇 IS BROWSER ME AWAAZ NAHI';return fin()}
+  const txt=String(t).replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu,'').replace(/\s+/g,' ').trim();if(!txt)return fin();
+  const ss=speechSynthesis;ss.cancel();
+  setTimeout(()=>{if(done)return;const u=new SpeechSynthesisUtterance(txt);u.rate=TTS.rate;u.pitch=TTS.pitch;
+   const dev=/[\u0900-\u097F]/.test(txt),want=dev?'hi-IN':'en-IN',vs=ss.getVoices();
+   const pv=vs.find(v=>v.name===TTS.voice)||vs.find(v=>v.lang.replace('_','-')===want)||vs.find(v=>v.lang.toLowerCase().indexOf(want.slice(0,2))===0);
+   if(pv){u.voice=pv;u.lang=pv.lang}else u.lang=want;
+   let started=false;u.onstart=()=>{started=true};u.onend=fin;
+   u.onerror=()=>{$('hud').textContent=dev?'🔇 HINDI AWAAZ NAHI MILI: Mic settings me Bhasha English karo':'🔇 AWAAZ NAHI MILI';fin()};
+   $('hud').textContent=AN.toUpperCase()+' BOL RAHA HAI...';$('wave').classList.add('sp');
+   try{ss.resume()}catch(e){}ss.speak(u);
+   setTimeout(()=>{if(!started&&!done&&!ss.speaking){$('hud').textContent=dev?'🔇 HINDI AWAAZ NAHI MILI: Mic settings me Bhasha English karo':'🔇 AWAAZ NAHI MILI. Test karo 🔊';fin()}},3000)},150);
+  setTimeout(fin,20000)}catch(e){fin()}} function resume(){if(always)setTimeout(startRec,300)}
+function localReply(t){const ids=findBy(t),hi=LANG==='hi-IN';
+ if(ids.length===1){show(ids[0]);return hi?'ये लीजिए, '+vault[ids[0]].n+' की जानकारी स्क्रीन पर है।':'Ye lo, '+vault[ids[0]].n+' ki details screen par hain.'}
+ if(ids.length>1){$('result').innerHTML='<div class="card res"><b>Kaunsa account?</b>'+ids.map(k=>`<div class="kv"><div>${esc(vault[k].n)}<br><small>${esc(vault[k].u)}</small></div><button data-a="show" data-v="${k}">Dikhao</button></div>`).join('')+'</div>';return hi?'कई अकाउंट मिले, कौन सा चाहिए?':'Kai account mile, kaunsa chahiye?'}
+ return hi?'माफ़ कीजिए, मुझे समझ नहीं आया।':'Sorry, mujhe samajh nahi aaya.'}
+async function handle(text,typed){
+ busy=true;let t=text,reply='';
+ if(/^\s*(bas|bas karo|bas itna|bas ho gaya|ruko|rukiye|stop|band karo|bye|bye bye|alvida|बस|बस करो|बस इतना|रुको|रुकिए|बंद करो|अलविदा)\s*[.!।]?\s*$/i.test(t)){always=false;updAlways();const bye=LANG==='hi-IN'?'ठीक है, जब ज़रूरत हो माइक दबाइए।':'Theek hai, jab zarurat ho mic dabana.';$('say').textContent=bye;hist=[];aiHist=[];busy=false;return speak(bye)}
+ if($('req').checked&&!typed){const nm=AN.toLowerCase().replace(/[.\s]/g,'');
+  if(!t.toLowerCase().replace(/[.\s]/g,'').includes(nm)){busy=false;if(!always)$('heard').textContent='Pehle "'+AN+'" bolo 😉';$('say').textContent='💡 Pehle "'+AN+'" bolo, phir apni baat.';return resume()}}
+ $('say').textContent='🤔 soch raha hoon...';
+ let acted=false;const _lr=window.__localFirst?window.__localFirst(t):null;if(_lr){reply=_lr;acted=true}const sm=acted?null:await getSamp();if(sm){try{
+  const list=vault.map((v,k)=>({i:k,naam:v.n,voice_naam:v.nick||''}));
+  const prompt=`Tum "${AN}" ho, Iron Man ke Jarvis jaisa friendly voice assistant, ek password vault app ke andar. User ki baat samjho, chhota natural jawab do (1-2 vakya) aur zarurat ho to action chuno.
+Bhasha: ${LANG==='hi-IN'?'Hindi (Devanagari lipi me)':'simple Hinglish ya English'}.
+Vault ke accounts (sirf naam; password/username tumhe nahi diye jaate): ${JSON.stringify(list)}
+Pichli baatcheet: ${hist.join(' | ')||'koi nahi'}
+User ne abhi kaha: ${JSON.stringify(t)}
+Sirf valid JSON do, aur kuch nahi: {"reply":"bolne wala jawab","action":"show|prefill|delete|list|lock|none","index":number ya null,"name":"prefill ke liye account ka naam ya null"}
+Niyam: user kisi account ka password/username maange to action "show" aur sahi index (voice_naam ya naam se match; Hindi/English spelling ka fark ignore karo; agar do match hon ya pata na ho to action "none" aur poocho). Naya password save karna ho to "prefill" aur name. Delete maange to "delete" aur index. Accounts ki list maange to "list" aur reply me naam bolo. Password ya username reply me KABHI mat bolo. Normal baat ya sawal ka seedha jawab do, action "none".`;
+  let r=await sm.json(prompt,{cache:false});
+  if(typeof r==='string')r=JSON.parse(r.replace(/```json|```/g,'').trim());
+  reply=String(r.reply||'');const a=r.action,k=Number.isInteger(r.index)?r.index:-1;
+  if(a==='show'&&vault[k]){show(k)}
+  else if(a==='prefill'){$('n').value=r.name||'';$('u').focus();$('n').scrollIntoView({behavior:'smooth'})}
+  else if(a==='delete'&&vault[k]){$('q').value=vault[k].n;render();$('list').scrollIntoView({behavior:'smooth'});reply+=LANG==='hi-IN'?' हटाने के लिए 🗑 दबाइए।':' Hatane ke liye 🗑 dabao.'}
+  else if(a==='lock'){setTimeout(()=>location.reload(),2500)}
+  acted=true;
+ }catch(e){acted=false}}
+ if(!acted&&!sm&&!findBy(t).length){const ai=await aiAsk(t);if(ai){reply=ai;acted=true}}
+ if(!acted)reply=localReply(t);
+ hist.push('User: '+t+' → Tum: '+reply);hist=hist.slice(-5);
+ $('say').textContent=reply;busy=false;speak(reply,resume)}
+function startRec(){
+ if(!SR){$('heard').textContent='Is browser me voice support nahi hai. Chrome use karo.';return}
+ if(rec||busy)return;
+ try{const fp=document.featurePolicy||document.permissionsPolicy;if(fp&&fp.allowsFeature&&!fp.allowsFeature('microphone')){$('heard').textContent='Is frame me mic band hai 🔒 Neeche box me keyboard ka 🎤 dabake bolo, main khud sun lunga 👇';$('cmd').focus();always=false;updAlways();return}}catch(e){}
+ rec=new SR();rec.lang=LANG;rec.interimResults=true;
+ rec.onstart=()=>{$('mic').classList.add('on');$('hud').textContent='LISTENING...';$('heard').textContent=always?'Sun raha hoon... bolo 🎧 (rokne ke liye "bas" bolo)':'Sun raha hoon... bolo 🎧'};
+ rec.onresult=e=>{window.__ns=0;const r=e.results[e.results.length-1];$('heard').textContent='"'+r[0].transcript+'"';if(r.isFinal)handle(r[0].transcript)};
+ rec.onerror=e=>{if(e.error==='not-allowed'||e.error==='service-not-allowed'){always=false;updAlways();$('heard').textContent='Mic blocked hai 🔒 Neeche box me keyboard ka 🎤 dabake bolo 👇';$('cmd').focus()}else if(e.error!=='no-speech'&&e.error!=='aborted')$('heard').textContent='Dikkat: '+e.error;else if(e.error==='no-speech'){window.__ns=(window.__ns||0)+1;if(always&&window.__ns>=3){always=false;updAlways();$('say').textContent='🎧 Kuch sunai nahi diya, mic band kar diya. Dobara tap karo.'}else if(!always)$('say').textContent='🎧 Kuch sunai nahi diya. Mic dabake dobara bolo.'}};
+ rec.onend=()=>{$('mic').classList.remove('on');rec=null;if(!busy){hudIdle();if(always)setTimeout(startRec,400)}};
+ try{rec.start()}catch(e){rec=null}}
+$('mic').onclick=()=>{getSamp();if(rec){always=false;updAlways();rec.stop();return}try{speechSynthesis.cancel()}catch(e){}always=true;updAlways();startRec()};
+$('always').onclick=()=>{getSamp();always=!always;updAlways();if(always){try{speechSynthesis.cancel()}catch(e){}startRec()}else if(rec)rec.stop()};
+function eye(b,...ids){b.onclick=()=>{const h=$(ids[0]).type==='password';ids.forEach(i=>$(i).type=h?'text':'password');b.textContent=h?'🙈':'👁'}}
+eye($('eye'),'p');eye($('eye0'),'mp','mp2');
+let atm;$('cmd').addEventListener('input',()=>{clearTimeout(atm);if(!$('auto').checked||$('cmd').value.trim().length<2)return;atm=setTimeout(()=>{if(!busy)$('send').click()},2000)});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,v=b.dataset.v;
+ if(a==='flip'){document.querySelectorAll('.owner').forEach(o=>o.classList.toggle('on'))}else if(a==='pick'){$('n').value=v;updSel();$('sel').scrollIntoView({behavior:'smooth',block:'center'});$('u').focus({preventScroll:true})}
+ else if(a==='show')show(+v);
+ else if(a==='cp')cp(+v,b.dataset.k);
+ else if(a==='del'){if(b.dataset.arm){b.dataset.arm='';del(+v)}else{b.dataset.arm='1';const o=b.textContent;b.textContent='Pakka? Dobara dabao ❗';setTimeout(()=>{b.dataset.arm='';b.textContent=o},3000)}}});
+(function(){const pats=['70 9 34 11','96 14 40 9','56 8 80 12','110 10 30 16'];let h='';
+ for(let k=0;k<9;k++){const rx=7+k*5.8;h+=`<ellipse cx="60" cy="80" rx="${rx}" ry="${rx*1.22}" stroke-dasharray="${pats[k%4]}" transform="rotate(${k*37} 60 80)"/>`}
+ $('ridges').innerHTML=h})();
+const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open('vaultfp',1);r.onupgradeneeded=()=>r.result.createObjectStore('k');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+async function idbOp(m,k,v){const d=await idb();return new Promise((res,rej)=>{const t=d.transaction('k',m==='get'?'readonly':'readwrite'),o=t.objectStore('k');const q=m==='get'?o.get(k):m==='put'?o.put(v,k):o.delete(k);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}
+const fpOn=()=>false;
+function fpEnv(){if(location.protocol==='file:')return 'Ye file seedha phone se khuli hai. Fingerprint ke liye isse https wali apni website par kholo.';if(!window.isSecureContext)return 'Page https nahi hai. Fingerprint ke liye https link chahiye.';if(window.top!==window)return 'Ye page Claude ke frame ke andar khula hai, isliye fingerprint block hai. Zip ko apni hosting (Netlify/Cloudflare Pages) par daalo aur wahi link seedha kholo.';return ''}
+function fpErr(e){const n=e&&e.name;if(n==='NotAllowedError')return 'Fingerprint cancel hua, ya Claude ke frame me allowed nahi hai. Master password se kholo.';if(n==='SecurityError')return 'Is page par fingerprint allowed nahi (security). Master password se kholo.';if(n==='NotSupportedError')return 'Is phone par ye fingerprint tarika support nahi.';return 'Fingerprint dikkat: '+(n||e)}
+function fpUi(){$('fpst').textContent=fpOn()?'✅ Chalu hai. Lock screen par fingerprint pad dabao.':'⚪ Abhi band hai.';$('fpbtn').textContent=fpOn()?'Fingerprint unlock band karo':'Fingerprint unlock ON karo 👆';
+ if(!$('lock').classList.contains('hide'))$('fptxt').textContent=fpOn()?'FINGERPRINT PAD DABAO 👆':'TOUCH TO UNLOCK'}
+$('fpbtn').onclick=async()=>{
+ if(fpOn()){try{await idbOp('del','key')}catch(e){}store.set('fp','0');fpUi();return}
+ const _e=fpEnv();if(_e){$('fpst').textContent='❌ '+_e;return}
+ if(!window.PublicKeyCredential||!navigator.credentials){$('fpst').textContent='❌ Is browser me fingerprint (WebAuthn) nahi hai. Chrome use karo.';return}
+ try{const ok=await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();if(!ok){$('fpst').textContent='❌ Phone me fingerprint/screen lock set nahi hai ya allowed nahi.';return}
+  $('fpst').textContent='Phone ka fingerprint maang raha hai... 👆';
+  const c=await navigator.credentials.create({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rp:{name:'PassFast'},user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'vault-owner',displayName:'Vault Owner'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required',residentKey:'preferred'},timeout:60000}});
+  await idbOp('put','key',key);store.set('fpcred',b64(c.rawId));store.set('fp','1');fpUi()
+ }catch(e){$('fpst').textContent='❌ '+fpErr(e)}};
+async function fpUnlock(){
+ await navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),allowCredentials:[{type:'public-key',id:ub(store.get('fpcred')),transports:['internal']}],userVerification:'required',timeout:60000}});
+ const k=await idbOp('get','key');if(!k){store.set('fp','0');fpUi();throw new Error('Fingerprint data nahi mila. Password se kholo aur dobara ON karo.')}
+ const d=JSON.parse(raw());salt=ub(d.s);key=k;vault=JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(d.iv)},key,ub(d.ct))));
+ $('fp').classList.add('ok');$('fptxt').textContent='ACCESS GRANTED ✓';$('lockmsg').textContent='Fingerprint match ✅';await new Promise(r=>setTimeout(r,900));
+ $('lock').classList.add('hide');$('app').classList.remove('hide');$('app').classList.add('enter');render();fpUi()}
+$('fp').onclick=async()=>{
+ if(fpOn()&&!$('mp').value){$('err').textContent='';try{await fpUnlock()}catch(e){$('err').textContent=fpErr(e);$('fp').classList.add('bad');setTimeout(()=>$('fp').classList.remove('bad'),900);$('mp').focus()}return}
+ if($('mp').value)$('unlock').click();else{$('mp').focus();$('fptxt').textContent='KEYBOARD KE UPAR 🔑 SUGGESTION DABAO ↓'}};
+fpUi();
+const PHOTO="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAcFBQYFBAcGBgYIBwcICxILCwoKCxYPEA0SGhYbGhkWGRgcICgiHB4mHhgZIzAkJiorLS4tGyIyNTEsNSgsLSz/2wBDAQcICAsJCxULCxUsHRkdLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCz/wgARCACoAKgDASIAAhEBAxEB/8QAGwAAAQUBAQAAAAAAAAAAAAAAAgABAwQGBQf/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAQMCBP/aAAwDAQACEAMQAAABeYrHNjnlmIpJTIXkRGJcw6DUrY4yMQx2QKkN6I59fo1iiplXYtKwKUigEYgRFiFLi2uaDdgY7OgyLHoY8LvIMciK1e7Cc9To1A3oisjKoRk4EZjmROtqbnbjjsMj6lh+dOREMu2EO1w3Y5u3E2vMcc4FNTI1sNivZXuVbkseK3nLPHmHrzottw2412OXiKdZ6tp+Vrlw7lDqOd65JyAmxCjRqYLNeyvaq21OORo8P0/Rj407tS/Dl6Ac46fm9iGPMbtotvPt2JusxExATo0gANg2qtoNnUrcjr1ObVrPz8fXYsca6vRpycyTLa3lab0eQWJrBYmATo0teeKyCaGVZ1Xlg0hOLNnAx30sWLDnvqxWqq9+x53tPT5LwmEJkgEkaIReyC1neGu+zuCqGm4dWWyD07zH0LDeQ7qy1qefd3Kb4mk+2PQ0mHOPTX867kukVBRqMz3fMOpGmCiByHZCV/RvMuvnp6nmI8Dx3bKvPvghJAGJCZhCUaN9hr3OiVozo3BwoZICWOaIjkMAnSHFwCFNDiwiQKiSQ8qQ5JD10omdKmZIJJDRpQzJACkAkj//xAAnEAABBAEDBAICAwAAAAAAAAABAAIDBBEFECASEyExFCIyQSMkQv/aAAgBAQABBQIBAINQag1dKwsLCxthYWFhYRCLUWohEIBBqDUGrCxu5zWB9+NhiuRSnuNXvhhEIhEIhNCAQCxwkkbEye26YyPwhKQ4SFxjsyRqvebNwKIRCITWoBY4SSNiZbsmzJnKkOSYS2JnrqwOrCpXergQiEQu2izHAnAvXTPK0Iu+taDvT2Kn8T29t4IKIIQeqFnvxblEJoT9unbVp+1UK6kCXHTahYx8fUy9XLCAjnBWmyFlrgQmp+zfRZla7FJ0HIWMquwxuq3myNdM1ot3oXosOXu2hJZK3JZuUE/ZvpagD8Fx+1WJpLcBkhe0TOtExsDE6UPEsXUvTqh/s8Cgn7N2f+FmF0M+jxiRhg8yQt7uoN8CEEfGCdEHKw3ps6fn5fEJ+zfW2paZPNJpMREPamTQyCaexFmGH6mHKk9W6rnz6XF12eLXJx2b63dF25nShjXyhwHS1fIDUTlPU9iY3aMRjrccY3HCyP4vrK19dsa7LXGKoGlz+kPmWnU+o+hycNmu4zM+M/rYQO2pHtaJrWXDqjjrztswcSgn7dK8hB2znNYL2otl1KatLGu5bYv7ExgqBi1GQR16tp9R8N6CccCmp+zU4tDZ9WqwqfXZ3IySSuGfkxkSRujymwhSODBan+RZR9V780Ci1SF6BDgimlOUuq1o1Nrk7lLYlmJKAR8NZ+VXwulHwNUs9Kb64RTyQmLVim24JE0rW7hZHwyimSfam8SxhalqzK6e7rG3WF5PFrsKxM6xZRR3d4a1ninddVkvan0QY63MGHbYQ88MrUrPbq/6yhwk/ABHwMOcsYDfWxOAPA4X7HdsgrKHCTb/AF+1+tj7OxWdicoHk7zIfQR4jgT4/X//xAAgEQACAQMEAwAAAAAAAAAAAAABAhEAEDAhMUBRAyBB/9oACAEDAQE/AeUiyacThGpoaWK9YE3tFiI91MGhRFiZwIdKmjth8dnb5hRopn65n//EAB8RAAEDBAMBAAAAAAAAAAAAAAEAAhEQIDAxAyFAQf/aAAgBAgEBPwH1PMJhxRIlALWB2qlA3lDG4dqENxfFOSnG37SFFz2ymt9n/8QAMhAAAQMCBQMBBgUFAAAAAAAAAQACEQMhEBIxQVEgMGFxEyIyQEKRBCNSYoEzQ6Gisf/aAAgBAQAGPwL52ScIlaj5HM5GMJBWpVnLK73Xd7M4wtYbwoGExjZezqG+x7klW+HZSSo0QGHHRDvib28o1fbozEXKjpaObdtpDZaMQ40y4BaRhkyEqQ04tdugTr2quUSYV9Fp5WYUnRMalZ2Mg8FNZWYGB3CJFMGFOSB6JwCjhMtN+2U5rtQr6iysSFRpcuzH0CY/9Bk+ikFXMp79tAnJnr3HFjWZTvwnNMseHar+v/qFL3F1R25Qabzxdfl1HBuwXvOLh6qESAs3F+7P6t1K2VsoUY1abKpa3RDNE+O7mAktUHRfDZaH7rMcX1qzJl1pVu97T+2dfC1Vlqobcp1Q3IEptRu+3HelxDR5VCgwzSmD5X5L7cHbD3nKTqi3d1lLbjccoQ8Bx+k9qXEAeV7rjUP7VFICkPuVnqvLz5Ka7hwx0wnYaY2dLeCvflh/wpaQR46TBNQ+FFICmPuVNR7nepwnCf3KOcfZA3+pTz0yxxCiqz+Wq1QfzbAfh2G7ru6wweqa4YezpXqc8KZmd8eVx1F7tzPXI1U/SdQslEy9414GFtOzkBvU/wCI9m5Udo8NsOsDz8qOxPV//8QAJxABAAICAgEEAgIDAQAAAAAAAQARITEQQVEgYXGBkbEwwaHR4fH/2gAIAQEAAT8h9OkEHoquDDDL/FazsOKpUxhSqXKQqxHZQQWNntwkSP8AAPnSAjwwSgilap/0Qp9gl6WfLKOzHTGgP1seR6DqOIiuX1ISktHUUVGCNh7gZ5MGxMSy4BWozDQVKlegoKSzK4qE+AMxMPB/9TA0j9yqsyg0GoV0OuEA1gZeytOk7jL499ziokHMHPF6slVM0UmnjuKgvGJjnhvkWIS+yaZ8SxwIwbjUGZ0E5kicQxDmBmCDjyNNDUS1B7Z4K4FjPqpeWpc3fsTRn8Tr17M21Cto2EYDSLThjBBN5WeRtBZxHr9kWOgCzK9roWfuCtS8UAIFl8vtBaE24udySs0gAOKzNqcwN+A9BgmkM7mnHTLxM4Vt03NaYVDw+FjiZcx8n7qFXNf7EPqPCMFckhgZtvkO/wA3KqYzEHM+HoY8N53ybm0ha4odVDH0Jsx/yK6VfZNRee349oq68Ihx5PVmCaXfhwfxKmr4mOs5uUq1u9/QxmDMunfoEsl0c7W8xA+p+lFibGzddwUIwzpyu46N0w1qAov7G4+hloWG5r6MtGRRuHalHMJ61NN9imSGvMOiXXUMITQoAFB6WBZKnkEfQy2t/tf6hkwy62hwoSZiUbsgOphLBnyeP4mWMS42ce6eFRK1dd6aV+IEvtYCyNJEoUHghFV+6Azwpvi7dR5I0aY+kscKzNIy89KiNIC+n5hb5Ih2NTdGu0r/ADBD5Ja0VCN0iFvURL/1OPB1KM+yyVIPK3B9q7Vxi4kVbMaw1Rx+YA+TiFrL83Be2+osHbHcCa9BC8E8jOZp0eJu7RfGmoWS299phCfo/wAQTf8AGTjrQD9HRwxZnqDrJTE1GSNCn3msKPEBW6kZP+4jZOfulUUdcINGXggpacri1AFujLHGtb/SMVtcNTqO18EYaZEKm2MQ5QV7v7lk8ds2z4ReKRW9pdS5cek1Uav7Qcn1GhHHPLyPOJRUrqvxHBweJSpBXy46jKwUzbFlxcxDXO2fMbTTi5cVshghbbxFyWL3NA5yJ4zyXC8MsNxqbg5gwckvhU/HAMTJqVmPKu/KLLiyhMvCf//aAAwDAQACAAMAAAAQSmrdZ9l0jWMki3g+pXZb7+m0/rf8o+eryNy99bAmgSaC3YU2jNFuo6ybJSvpfwlquONQ48muUEWK+Hi+ljPelLg+ZkZh8+5ghVNGwYdlJMcaCwcAgf8AQYIvnvP/xAAeEQEAAgICAwEAAAAAAAAAAAABABEhMCAxEEBBUf/aAAgBAwEBPxDcEv4RE7ncSuXcZmGVrPHZyIMEy1FUxiJeh9SJcsFxJct4nigYBYAYY4lzQrAvyYJZejrLl2Gm/TKsQt+o8//EAB4RAAMAAwADAQEAAAAAAAAAAAABERAgITAxUUBB/9oACAECAQE/EPJMyCafoaE90RREHPC3FRuCjjLFY9Xj+TLOCfcKLV4WqHwxuC6JTV5Ug0+nSINTWXCQ90Qh1h5ErpDwv1k1WjF+H//EACUQAQACAgICAgIDAQEAAAAAAAEAESExQVFhcYGREMGhsfDR8f/aAAgBAQABPxCsMTwS/iU8QeqmDU8MrWo+ERE9SrKYMunjmFxMDiUcTwTxzAS2pg1DPxgqU/BiI8eY0eRxv76lD3lwfzKPKdtSjNixVxPH4LZezH+KqU3LaldYmLUx/hHUqG/He6vxFjCUG6DwftjWyeUXHwAOIFGnmzMuhRpsfMCEmi/pf0w/z+Ku7/DfNxK7i0sg1qY9TAlYiNwlQre/iWZIyP67g0hPL/2IA+Ff7EXkUoVxLxhNJDHQrnmWFGbLdSzgYRy+L5inUsZqNiWEsNTfiY8ZmE4hSJj8FWAqXgmYQgDjGPaIsG2cxUgGNG6jEvhfQVG4mU1xLzCL6sgEKNmxjoOM+iM61hQ/uPkNafUx6jhOyY9Q6uYpnSrajjlxspxGV46dj/VfMudBk810HxDFS2rLhNMrgo2wd5SiFLGGC486w+I+CeMQlWHQf1ALll8R2Wms98/ZEzKlm/x2SmCtAg0icTPVLBLCo2cZeCPGWOvHzGsGzobjtQvWL6h/romRodGLMthcHx5i0VsKxTzxLmlpw/pY1mAncZGx9l/8grSgcLxEggsmNlRM2QpGqNReIoLPzXNbljbRcd0dSz+4BZvVO7i32YhNdUUe6htOVKraOVM1i+YjjCNSFuzXE1jGL/i3L9xo2qOY9tEQha99heK6zO3inuEtiEAbv4+Js1UTESCiWQRmYaTXGFQBKKfUqyykQDq01h15jJuAHgun+a+IoCK0CWpEurdpfdPzDXzGO2PqN/EoJvkjj3EV08NQG74SKU8Kp4CCOysQ2VYoaq9xLOp8R/CqTSCOEpT1+EonZHnaUJWLQn2+fcT1asFwGr4dhI5h02t9qj0JWJrpbQ3jGZm91XlXaGjy4lYaQrB4viOFw2x7ClnhmJgAoBQEe2loUusn1DulLQ4RqPnMcxIIcS3shasI0epX4Bhl/kZk2HVa1zCRx/KUNTZkGvMrg1KUPK/EIQYBNRMlhmxNsR9iDiBdY5tIPVYtSvbiBZqOokOJSyTumQnH+GXGcdyIo5D4/qXA1c+o9exCP3BACu3+sMfNYQFqPicCUVK++ho7j3iGMOW2us18QIQVAFARKibnESDDAzQ3qDTcAKZpH84rMukyh5n9nniXgLHMFBYdnMUKQNtxodICMLb1ZC6fEq2DzZ5V/tVHcfMY1GKKybXLzFt2gik1BAMETEYhuz/cweSYt++QHHaspSvTU8B69xJtyxt7gVKYo37h+2ZvKMGBVeHb6/7MZgA6g/T0yqeLQG9Zw/E2jHfiMWGYUyIKlzGSwcyYPlnA2Y7++Pq45accvy4Pgicd2Zn3qG9QV42/U5m2eotKoeswa8HRFgACq8S/TjPHD73DeYULsrCMLnt34uT4ga42t3syfJNZAiB+SLEqvMwEM0ABVWqIEKzMo854r1c62kP5HB8E8w+Snrg+I7m2MA+kvCdlyqywS/QQNnATxN8YbOblAavI9D8u3x7llJaXfjiK6hgqoCizUWhb8TsTQsPs0wtC85nysfTBVRc39kxGZm1KDm7Xytr4IXQDgKlNuAhpYYirILNWXH38aNkuV9wCtUJnl9VGYGh7Hk9yigbmf41wnn34aP4gBaVJtS5V7gR1Cia8xFZy5f8AyMj8AG2vMK3mayspszFscRi9A+gyxGih4NA8BX1F0ymOjc4nUcAACWHtMpYRiEC6PmBo4c4nNHCdwUVuSgGx7Guj4jkdh2X/ADLkShfS+5YvbDDLOi+SClW6XEC43LjVxLjygArSWqGftg+WOo4of3MreZzO4rY7i5b3CpSbdPtCAwYqVArLE2sr0eHAQGOoCJi0tXzDKSETLo98SqVeMxckExHOI+pcyQBT6cvy3MD7/Qj0OY64Syyu4q9zwIgA2h+szYYNOoosx5lmWXL7ll8nUCk4Jg9sHHMZx+T9fuJuhxLr5iwHMSpwsvSbW7hj2Hcstcxbn2036g4icCF/UaUHOoRtMAaNyiDuLgzBTQTfOfMs6rY9TkjTipllCdRQHNZn/9k=";
+const OWN=`<button type="button" class="ownchip"><img src="${PHOTO}" alt="" width="40" height="40"><span><small>ORGANISER</small><b>S.K Aayan</b></span><i aria-hidden="true">›</i></button>`;
+document.querySelectorAll('.ownslot').forEach(e=>e.innerHTML=OWN);
+try{localStorage.removeItem('sname2')}catch(e){}
+$('lf').addEventListener('submit',e=>e.preventDefault());
+$('mp').addEventListener('input',e=>{if(!first&&$('mp').value.length>=6&&(!e.inputType||e.inputType==='insertReplacementText'))setTimeout(()=>{if(!$('lock').classList.contains('hide'))$('unlock').click()},350)});
+function updSel(){const n=$('n').value.trim();
+ $('sel').innerHTML=n?`${icon(n,34)}<span>✅ ${esc(n)}</span><small style="color:var(--mut);font-weight:400;margin-left:auto">ke liye save ho raha hai</small>`:'';
+ document.querySelectorAll('.chip[data-a="pick"]').forEach(c=>c.classList.toggle('on',!!n&&c.dataset.v===n));
+ $('u').placeholder=n?n+' ka username / email / number':'Username / Email / Number';$('p').placeholder=n?n+' ka password':'Password'}
+$('n').addEventListener('input',updSel);
+$('fpgo').onclick=()=>$('fp').click();
+$('pwgo').onclick=()=>{$('mp').focus();$('fptxt').textContent='PASSWORD DAALO ↓'};
+$('fpchrome').onclick=async()=>{const pw=$('fpmp').value,o=$('fpst2');if(pw.length<6){o.textContent='❌ Master Password daalo.';return}
+ try{const d=JSON.parse(raw());const k=await derive(pw,ub(d.s));await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(d.iv)},k,ub(d.ct))}catch(e){o.textContent='❌ Galat Master Password.';return}
+ try{if(!window.PasswordCredential)throw new Error('np');await navigator.credentials.store(new PasswordCredential({id:'vault-owner',password:pw,name:'PassFast'}));$('fpmp').value='';o.textContent='✅ Chrome ko bhej diya. "Save password" popup aaye to Save dabao. Ab lock screen par fingerprint pad dabao.'}
+ catch(e){o.textContent='⚠️ Chrome ne seedha save nahi kiya. Koi baat nahi: Lock karke Master Password se kholo, jab "Save password" popup aaye tab Save dabao. Bas ho gaya.'}};
+</script>
+<script>/* PassFast feature modules: language engine, About, voice actions, backup helpers, reset, email code.
+   Each module runs in its own try/catch so one failure cannot stop the others. */
+/* ---- module 1 ---- */
+try{
+(function(){
+var ANALYTICS_SRC="";/* owner: privacy-friendly analytics script URL (e.g. Plausible) yahan daalo; khali = analytics OFF */
+if(location.protocol==='http:'&&!/^(localhost|127\.|\[::1\])/.test(location.hostname))location.replace('https://'+location.host+location.pathname+location.search+location.hash);
+function g(k){try{return localStorage.getItem(k)}catch(e){return null}}function st(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function ld(){if(ANALYTICS_SRC&&g('pf_consent')==='yes'){var t=document.createElement('script');t.defer=true;t.src=ANALYTICS_SRC;document.head.appendChild(t)}}
+var cb=document.getElementById('cb');if(!g('pf_consent'))cb.classList.remove('hide');
+document.getElementById('cby').onclick=function(){st('pf_consent','yes');cb.classList.add('hide');ld()};
+document.getElementById('cbn').onclick=function(){st('pf_consent','no');cb.classList.add('hide')};ld();
+function hs(){var h=location.hash.slice(1);['privacy','terms'].forEach(function(i){var d=document.getElementById(i);if(d&&h===i&&!d.open&&d.showModal)d.showModal();else if(d&&h!==i&&d.open)d.close()})}
+document.querySelectorAll('dialog.lg').forEach(function(d){d.addEventListener('close',function(){if(location.hash)history.replaceState(null,'',location.pathname+location.search)})});
+addEventListener('hashchange',hs);hs();
+})();
+}catch(e){console.error("PassFast module 1 failed:",e)}
+
+/* ---- module 2 ---- */
+try{
+(function(){
+var $=function(i){return document.getElementById(i)};
+window.fpAsk=function(){return;if(fpOn()||store.get('fpask')==='no'||fpEnv()||!window.PublicKeyCredential||$('fpask'))return;
+var c=document.createElement('div');c.className='card';c.id='fpask';
+c.innerHTML='<b>👆 Fingerprint se kholna chahte ho?</b><p class="s" style="margin:6px 0 10px">Ek baar set karo, agli baar bas fingerprint lagao. Master Password backup rahega.</p><div class="row"><button id="fpy">Haan, set karo</button><button class="g" id="fpl">Baad me</button></div>';
+var r=$('result');r.parentNode.insertBefore(c,r);
+$('fpy').onclick=function(){c.remove();$('setdlg').showModal();$('fpcard').open=true;$('fpbtn').click()};
+$('fpl').onclick=function(){store.set('fpask','no');c.remove()}};
+$('setbtn').onclick=function(){$('setdlg').showModal()};$('setx').onclick=function(){$('setdlg').close()};
+if(fpOn()&&!fpEnv()){setTimeout(function(){if(!$('lock').classList.contains('hide')&&!$('mp').value)fpUnlock().catch(function(){})},600)}
+var hid=0;document.addEventListener('visibilitychange',function(){if(document.hidden)hid=Date.now();else if(hid&&Date.now()-hid>60000&&$('lock').classList.contains('hide'))location.reload()});
+})();
+}catch(e){console.error("PassFast module 2 failed:",e)}
+
+/* ---- module 3 ---- */
+try{
+(function(){
+var T=function(h,e){var l=window.__lang||'hx';return(l==='hx'||l==='hi')?h:e};
+function applyLang(){window.__applyI18n&&window.__applyI18n();setType();updBk()}
+// theme
+function applyTheme(){var t=store.get('pf_theme')||'light',r=document.documentElement;if(t==='auto')r.removeAttribute('data-theme');else r.dataset.theme=t}
+$('thsel').value=store.get('pf_theme')||'light';$('thsel').onchange=function(){store.set('pf_theme',this.value);applyTheme()};applyTheme();
+// auto-lock + wipe
+var it;function arm(){clearTimeout(it);var m=+store.get('pf_al')||5;it=setTimeout(function(){if(key)location.reload()},m*60000)}
+['click','keydown','touchstart','pointerdown'].forEach(function(e){addEventListener(e,arm,{passive:true})});arm();
+$('alsel').value=store.get('pf_al')||'5';$('alsel').onchange=function(){store.set('pf_al',this.value);arm()};
+$('wipe').checked=store.get('pf_wipe')==='1';
+$('wipe').onchange=function(){var el=this;if(el.checked){el.checked=false;window.askYes(T('10 galat tries ke baad poora vault hamesha ke liye mit jayega. Pakka ON karein?','After 10 wrong tries the whole vault is erased for good. Turn ON?')).then(function(ok){if(ok){el.checked=true;store.set('pf_wipe','1')}})}else store.set('pf_wipe','0')};
+window.wipeVault=function(){['vault_v1','fp','fpcred','pf_f'].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});mem.v=null;location.reload()};
+// change master password
+$('cpbtn').onclick=async function(){var o=$('cpo').value,n1=$('cpn').value,n2=$('cpn2').value,m=$('cpm');m.style.color='var(--bad)';m.textContent='';
+if(n1.length<8||!/[A-Za-z]/.test(n1)||!/[0-9]/.test(n1))return m.textContent=T('Naya password: 8+ akshar, letters aur numbers dono.','New password: 8+ characters, letters and numbers.');
+if(n1!==n2)return m.textContent=T('Dono naye password alag hain.','The new passwords do not match.');
+try{var r=JSON.parse(raw()),k=await derive(o,ub(r.s));await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(r.iv)},k,ub(r.ct))}catch(e){return m.textContent=T('Purana password galat hai.','Old password is wrong.')}
+salt=crypto.getRandomValues(new Uint8Array(16));key=await derive(n1,salt);await save();
+if(fpOn()){try{await idbOp('put','key',key)}catch(e){}}
+['cpo','cpn','cpn2'].forEach(function(x){$(x).value=''});m.style.color='var(--ac)';m.textContent=T('✅ Master Password badal gaya. Vault wahi hai. (Chrome ka saved password ho to wo naya daal dena.)','✅ Master Password changed. Your vault is intact. (Update any password saved in Chrome.)')};
+// strength + generator
+function score(p){var s=0;if(p.length>=8)s++;if(p.length>=12)s++;if(/[a-z]/.test(p)&&/[A-Z]/.test(p))s++;if(/\d/.test(p))s++;if(/[^A-Za-z0-9]/.test(p))s++;if(/^(.)\1+$/.test(p)||/(password|123456|qwerty|iloveyou|abc123)/i.test(p))s=Math.min(s,1);return s}
+function upStr(){var p=$('p').value,sc=score(p),b=$('sm'),t=$('stxt');b.style.width=(p?Math.max(1,sc)*20:0)+'%';b.style.background=sc<=1?'var(--bad)':sc<=3?'#f59e0b':'#22c55e';
+var re=p&&vault.some(function(v){return(v.t||'login')==='login'&&v.p===p});
+t.textContent=!p?'':(sc<=1?T('⚠️ Kamzor password. Lamba aur mix banao.','⚠️ Weak password. Make it longer and mixed.'):sc<=3?T('Theek-thaak. Aur lamba karo.','Okay. Make it longer.'):T('✅ Mazboot password.','✅ Strong password.'))+(re?T(' 🔁 Ye pehle bhi use hua hai!',' 🔁 Already used elsewhere!'):'')}
+function rnd(n){var a=new Uint32Array(1),lim=Math.floor(4294967296/n)*n;do crypto.getRandomValues(a);while(a[0]>=lim);return a[0]%n}
+function gen(){var S=['abcdefghjkmnpqrstuvwxyz','ABCDEFGHJKLMNPQRSTUVWXYZ','23456789','!@#$%&*?'],A=S.join(''),o=S.map(function(x){return x[rnd(x.length)]});while(o.length<16)o.push(A[rnd(A.length)]);for(var i=o.length-1;i>0;i--){var j=rnd(i+1),t=o[i];o[i]=o[j];o[j]=t}return o.join('')}
+$('gen').onclick=function(){$('p').type='text';$('p').value=gen();upStr()};$('p').addEventListener('input',upStr);
+// type switching
+function setType(){var t=$('ptype').value,ph={login:['Username / Email / Number','Password'],card:['Card number','CVV'],upi:['UPI ID (naam@bank)','UPI PIN'],totp:['Account / email','2FA secret key (ya otpauth link)']}[t]||['',''];
+
+$('u').placeholder=ph[0];$('p').placeholder=ph[1];$('u').classList.toggle('hide',t==='note');$('px').classList.toggle('hide',t!=='card');$('pnote').classList.toggle('hide',t!=='note');$('p').parentNode.classList.toggle('hide',t==='note');$('pgx').classList.toggle('hide',t!=='login');
+$('p').type=(t==='login'||t==='upi'||t==='card'||t==='totp')?'password':'text'}
+$('ptype').onchange=setType;
+// add handler (all types, with validation)
+$('add').onclick=async function(){var t=$('ptype').value,n=$('n').value.trim(),u=$('u').value.trim(),p=$('p').value,x='';var bad=function(m){$('heard').textContent='⚠️ '+m};
+if(!n)return bad(T('Naam likho.','Enter a name.'));
+if(t==='card'){u=u.replace(/[\s-]/g,'');if(!/^\d{13,19}$/.test(u))return bad(T('Card number 13-19 ank ka hona chahiye.','Card number must be 13-19 digits.'));x=$('px').value.trim();if(!/^(0[1-9]|1[0-2])\/\d{2}$/.test(x))return bad(T('Expiry MM/YY me likho.','Enter expiry as MM/YY.'));if(!/^\d{3,4}$/.test(p))return bad(T('CVV 3 ya 4 ank ka hota hai.','CVV is 3-4 digits.'))}
+else if(t==='upi'){if(!/^[\w.\-]{2,}@[A-Za-z]{2,}$/.test(u))return bad(T('UPI ID aisi likho: naam@bank','UPI ID looks like name@bank'));if(!/^\d{4,6}$/.test(p))return bad(T('UPI PIN 4-6 ank ka hota hai.','UPI PIN is 4-6 digits.'))}
+else if(t==='note'){p=$('pnote').value.trim();if(!p)return bad(T('Note likho.','Write a note.'))}
+else if(t==='totp'){var m=p.match(/secret=([A-Za-z2-7=]+)/i);if(m)p=m[1];p=p.replace(/[\s=-]/g,'').toUpperCase();if(!/^[A-Z2-7]{8,}$/.test(p))return bad(T('2FA secret galat hai (sirf A-Z aur 2-7).','Invalid 2FA secret (only A-Z and 2-7).'))}
+else if(!p)return bad(T('Password likho.','Enter a password.'));
+var rec={n:n,u:u,p:p,nick:$('nick').value.trim(),t:t,x:x};
+if(editIdx>=0&&vault[editIdx]){var old=vault[editIdx];vault[editIdx]=Object.assign({},old,rec,{ts:old.p===p?old.ts:Date.now()});await save();endEdit();$('heard').textContent=T('✅ Update ho gaya','✅ Updated')}
+else{rec.ts=Date.now();vault.push(rec);await save();['n','u','p','nick','px','pnote'].forEach(function(i){$(i).value=''})}
+render();updSel();upStr()};
+// stamp time on legacy entries
+var _sv=save;save=async function(){var now=Date.now();vault.forEach(function(v){if(!v.ts)v.ts=now});return _sv()};
+// 2FA code generator (RFC 6238, SHA-1, 6 digits, 30s)
+async function totp(sec,at){var B='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',bits='';for(var i=0;i<sec.length;i++){var v=B.indexOf(sec[i]);if(v>=0)bits+=v.toString(2).padStart(5,'0')}var by=new Uint8Array(Math.floor(bits.length/8));for(i=0;i<by.length;i++)by[i]=parseInt(bits.substr(i*8,8),2);
+var c=Math.floor((at||Date.now())/30000),buf=new ArrayBuffer(8),dv=new DataView(buf);dv.setUint32(0,Math.floor(c/4294967296));dv.setUint32(4,c>>>0);
+var k=await crypto.subtle.importKey('raw',by,{name:'HMAC',hash:'SHA-1'},false,['sign']),h=new Uint8Array(await crypto.subtle.sign('HMAC',k,buf)),o=h[19]&15,n=((h[o]&127)<<24)|(h[o+1]<<16)|(h[o+2]<<8)|h[o+3];return String(n%1000000).padStart(6,'0')}
+window.__totp=totp;window.__score=score;
+// show(): relabel per type, live 2FA
+var _sh=show;show=function(i){_sh(i);var v=vault[i];if(!v)return;var t=v.t||'login';addEditBtn(i);if(t==='login')return;var kv=document.querySelectorAll('#result .kv'),ls=document.querySelectorAll('#result .l');
+var nm={card:['Card number','CVV'],upi:['UPI ID','UPI PIN'],note:['','Note'],totp:['Account','2FA code']}[t];if(ls[0])ls[0].textContent=nm[0];if(ls[1])ls[1].textContent=nm[1];
+if(t==='note'&&kv[0]){kv[0].style.display='none'}
+if(t==='card'&&kv[0])kv[0].insertAdjacentHTML('afterend','<div class="kv"><div><span class="l">Expiry</span>'+esc(v.x||'-')+'</div></div>');
+if((t==='note')&&kv[1])kv[1].firstElementChild.style.whiteSpace='pre-wrap';
+if(t==='totp'&&kv[1]){var d=kv[1].firstElementChild;d.innerHTML='<span class="l">2FA code</span><b id="totpc" style="font-size:26px;letter-spacing:4px">------</b> <small id="totpt"></small>';
+var btn=kv[1].querySelector('button');if(btn){btn.dataset.a='cpcode';btn.onclick=function(){var c=document.getElementById('totpc').textContent;navigator.clipboard.writeText(c).then(function(){$('heard').textContent='Copy ho gaya ✅'}).catch(function(){})}}
+var iv=setInterval(async function(){var e=document.getElementById('totpc');if(!e){clearInterval(iv);return}e.textContent=await totp(v.p);document.getElementById('totpt').textContent=(30-Math.floor(Date.now()/1000)%30)+'s'},1000);document.getElementById('totpc').textContent='......'}};
+// render(): badges, masked card number
+var TL={card:'💳 Card',upi:'📱 UPI',note:'📝 Note',totp:'🔢 2FA'};
+var _rd=render;render=function(){_rd();var mo=+store.get('pf_age')||6,cnt={};vault.forEach(function(v){if((v.t||'login')==='login'&&v.p)cnt[v.p]=(cnt[v.p]||0)+1});
+document.querySelectorAll('#list .item').forEach(function(el){var b=el.querySelector('[data-v]');if(!b)return;var v=vault[+b.dataset.v];if(!v)return;var t=v.t||'login',sm=el.querySelector('small'),bg=[];
+if(t==='card'&&sm)sm.textContent='•••• '+(v.u||'').slice(-4)+(v.nick?' · 🗣️ '+v.nick:'');
+if(t==='note'&&sm)sm.textContent=T('(chhupa hua note)','(hidden note)');
+var rw=el.querySelector('.row');if(rw){rw.style.flexWrap='wrap';var eb=document.createElement('button');eb.type='button';eb.className='g';eb.textContent='✏️ Edit';eb.onclick=function(){startEdit(+b.dataset.v)};rw.insertBefore(eb,rw.lastElementChild)}
+if(TL[t])bg.push(TL[t]);
+if(t==='login'&&score(v.p)<=1)bg.push(T('⚠️ kamzor','⚠️ weak'));
+if(t==='login'&&cnt[v.p]>1)bg.push(T('🔁 repeat','🔁 reused'));
+if(v.ts&&(t==='login'||t==='upi')&&Date.now()-v.ts>mo*2629800000)bg.push(T('🕒 '+mo+'+ mahine purana, badlo','🕒 over '+mo+' months old, change it'));
+bg.forEach(function(x){var sp=document.createElement('span');sp.className='bd2';sp.textContent=x;el.firstElementChild.appendChild(sp)})})};
+$('q').oninput=render;
+// ---- edit entry
+var editIdx=-1;
+function endEdit(){editIdx=-1;$('add').textContent=T('Save karo ✅','Save ✅');$('ced').classList.add('hide');['n','u','p','nick','px','pnote'].forEach(function(i){$(i).value=''});upStr()}
+function startEdit(i){var v=vault[i];if(!v)return;editIdx=i;var t=v.t||'login';$('ptype').value=t;setType();$('n').value=v.n;$('u').value=v.u||'';$('nick').value=v.nick||'';$('px').value=v.x||'';if(t==='note')$('pnote').value=v.p;else $('p').value=v.p;
+$('add').textContent=T('💾 Update karo','💾 Update');$('ced').classList.remove('hide');upStr();$('result').innerHTML='';$('n').scrollIntoView({behavior:'smooth',block:'center'})}
+$('ced').onclick=endEdit;window.__startEdit=startEdit;
+function addEditBtn(i){var d=document.querySelector('#result button.d');if(!d||document.getElementById('rEdit'))return;var b=document.createElement('button');b.type='button';b.id='rEdit';b.className='g';b.style.cssText='width:100%;margin-top:6px';b.textContent='✏️ Edit';b.onclick=function(){startEdit(i)};d.parentNode.insertBefore(b,d)}
+var _dl=del;del=async function(i){if(editIdx>=0)endEdit();return _dl(i)};
+// ---- clipboard auto-clear (30s)
+var _cp=cp;cp=async function(i,k){await _cp(i,k);clearTimeout(window.__cc);var val=vault[i]&&vault[i][k];if(!val||$('heard').textContent.indexOf('✅')<0)return;
+window.__cc=setTimeout(async function(){try{var cur=await navigator.clipboard.readText();if(cur!==val)return}catch(e){}try{await navigator.clipboard.writeText(' ')}catch(e){}},30000);$('heard').textContent+=T(' · 30s me clipboard saaf ho jayega',' · clipboard clears in 30s')};
+// ---- backup / restore
+function updBk(){var ts=store.get('pf_lastbk');$('bkl').textContent=T('Aakhri backup: ','Last backup: ')+(ts?new Date(+ts).toLocaleString():T('kabhi nahi ⚠️','never ⚠️'))}
+$('bkx').onclick=function(){var m=$('bkm'),r=raw();m.style.color='var(--bad)';if(!r){m.textContent=T('Abhi vault me kuch save nahi hai.','Nothing saved in the vault yet.');return}
+var data=JSON.stringify({app:'PassFast',v:1,saved:new Date().toISOString(),vault:JSON.parse(r)});$('bkt').value=data;
+try{var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download='passfast-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove()}catch(e){}
+store.set('pf_lastbk',String(Date.now()));updBk();m.style.color='var(--ac)';m.textContent=T('✅ Backup ban gaya. File download na ho to neeche ka text copy karke kisi safe jagah rakh lo.','✅ Backup created. If no file downloaded, copy the text below and keep it somewhere safe.')};
+$('bkc').onclick=async function(){var t=$('bkt');if(!t.value)return;try{await navigator.clipboard.writeText(t.value);$('bkm').style.color='var(--ac)';$('bkm').textContent=T('Copy ho gaya ✅','Copied ✅')}catch(e){t.select();$('bkm').textContent=T('Text select ho gaya, manually copy karo.','Text selected, copy it manually.')}};
+$('bkf').onclick=function(){$('bkfile').click()};
+$('bkfile').onchange=function(){var f=this.files[0];this.value='';if(!f)return;if(f.size>5e6){$('bkm').textContent=T('File bahut badi hai.','File is too large.');return}var r=new FileReader();r.onload=function(){$('bkt').value=r.result;$('bkm').style.color='var(--ac)';$('bkm').textContent=T('File load ho gayi. Ab password daalo aur Restore dabao.','File loaded. Enter the password and press Restore.')};r.readAsText(f)};
+$('bki').onclick=async function(){var m=$('bkm'),o;m.style.color='var(--bad)';m.textContent='';
+try{o=JSON.parse($('bkt').value.trim());var b=o.vault||o;if(!b||typeof b.s!=='string'||typeof b.iv!=='string'||typeof b.ct!=='string')throw 0;o=b}catch(e){return m.textContent=T('Ye valid PassFast backup nahi lag raha.','This does not look like a valid PassFast backup.')}
+var arr;try{var k=await derive($('bkpw').value,ub(o.s));arr=JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(o.iv)},k,ub(o.ct))));if(!Array.isArray(arr))throw 0}catch(e){return m.textContent=T('Password galat hai ya backup kharab hai.','Wrong password or corrupted backup.')}
+var A=['login','card','upi','note','totp'],added=0,skipped=0,have={},sig=function(v){return[v.t,v.n,v.u,v.p].join('\u0001')};
+vault.forEach(function(v){have[sig({t:v.t||'login',n:v.n,u:v.u,p:v.p})]=1});
+arr.forEach(function(v){if(!v||typeof v.n!=='string'||typeof v.p!=='string')return;var e={n:v.n.slice(0,200),u:String(v.u||'').slice(0,300),p:v.p.slice(0,5000),nick:String(v.nick||'').slice(0,200),t:A.indexOf(v.t)>=0?v.t:'login',x:String(v.x||'').slice(0,10),ts:+v.ts||Date.now()},g=sig(e);if(have[g]){skipped++;return}have[g]=1;vault.push(e);added++});
+if(added)await save();render();updSel();$('bkpw').value='';m.style.color='var(--ac)';m.textContent=T('✅ '+added+' entry judi, '+skipped+' pehle se thi.','✅ '+added+' added, '+skipped+' already existed.')};
+updBk();
+applyLang();setType();
+})();
+}catch(e){console.error("PassFast module 3 failed:",e)}
+
+/* ---- module 4 ---- */
+try{
+document.addEventListener('keydown',function(e){var f=e.target;if((e.key==='Enter'||e.key===' ')&&f.classList&&f.classList.contains('flip')){e.preventDefault();f.click()}});
+document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('.owner'))setTimeout(function(){document.querySelectorAll('.flip').forEach(function(f){f.setAttribute('aria-pressed',f.closest('.owner').classList.contains('on'))})},0)});
+}catch(e){console.error("PassFast module 4 failed:",e)}
+
+/* ---- module 5 ---- */
+try{
+/*SMART_REPLY*/
+(function(){
+var R=function(d,l){return LANG==='hi-IN'?d:l};
+var base=localReply;
+function sc(el){if(el&&el.scrollIntoView)el.scrollIntoView({behavior:'smooth',block:'center'})}
+localReply=function(t){
+ if(findBy(t).length)return base(t);
+ var x=' '+String(t).toLowerCase().replace(/[?!.,।]/g,' ')+' ',has=function(re){return re.test(x)};
+ if(has(/(\s|^)(lock|band kar|band karo)(\s|$)|लॉक|ताला/)){setTimeout(function(){location.reload()},2500);return R('ठीक है, वॉल्ट लॉक कर रहा हूँ।','Theek hai, vault lock kar raha hoon.')}
+ if(has(/\blist\b|लिस्ट|सूची|(sabhi|saare|sare|mere|kitne)\s+(account|password)|मेरे\s+अकाउंट/)){
+  var nm=vault.map(function(v){return v.n}).slice(0,8);$('q').value='';render();sc($('list'));
+  return nm.length?R('आपके '+vault.length+' आइटम हैं: '+nm.join(', ')+'।','Aapke '+vault.length+' items hain: '+nm.join(', ')+'.'):R('अभी कुछ सेव नहीं है।','Abhi kuch save nahi hai.')}
+ if(has(/(password|पासवर्ड).{0,20}(bana|generate|banao|बना)|(bana|generate|banao|बना).{0,20}(password|पासवर्ड)|strong password|mazboot/)){
+  try{$('ptype').value='login';$('ptype').dispatchEvent(new Event('change'));$('gen').click();$('n').focus({preventScroll:true});sc($('n'))}catch(e){}
+  return R('मैंने फ़ॉर्म में एक मज़बूत पासवर्ड भर दिया है। नाम लिखकर सेव करें।','Maine form me ek mazboot password bhar diya hai. Naam likh kar Save karo.')}
+ if(has(/(naya|new|add|save|jod|नया|सेव|जोड़).{0,25}(password|account|पासवर्ड|अकाउंट)/)){
+  try{$('ptype').value='login';$('ptype').dispatchEvent(new Event('change'));$('n').focus({preventScroll:true});sc($('n'))}catch(e){}
+  return R('फ़ॉर्म खोल दिया है। नाम और पासवर्ड लिखिए।','Form khol diya hai. Naam aur password likho.')}
+ if(has(/thank|shukriya|dhanyawad|धन्यवाद|शुक्रिया|थैंक/))return R('कोई बात नहीं! 😊','Koi baat nahi! 😊');
+ if(has(/kaise ho|kya haal|how are you|कैसे हो|कैसे हैं|क्या हाल/))return R('मैं बढ़िया हूँ! बताइए, क्या मदद करूँ?','Main badhiya hoon! Batao, kya madad karoon?');
+ if(has(/(tum|aap|you)\s+(kaun|who)|who are you|tumhara naam|aapka naam|तुम कौन|आप कौन|तुम्हारा नाम|आपका नाम/))return R('मैं '+AN+' हूँ, PassFast का वॉइस असिस्टेंट। आपके पासवर्ड बोलकर निकालने में मदद करता हूँ।','Main '+AN+' hoon, PassFast ka voice assistant. Aapke passwords bolkar nikaalne me madad karta hoon.');
+ if(has(/(\s)(hi|hii|hello|hey|namaste|namaskar|hlo)(\s)|नमस्ते|नमस्कार|हैलो|हेलो|हाय/))return R('नमस्ते! मैं '+AN+' हूँ। किस अकाउंट का पासवर्ड चाहिए?','Namaste! Main '+AN+' hoon. Kis account ka password chahiye?');
+ if(has(/(\s)(date|tarikh|tareekh|din)(\s)|तारीख|तिथि|कौन सा दिन|कौनसा दिन/)){var d=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});return R('आज '+d+' है।','Aaj '+d+' hai.')}
+ if(has(/(\s)(time|samay|waqt|baje)(\s)|टाइम|समय|बजे/)){var tm=new Date().toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit'});return R('अभी समय '+tm+' है।','Abhi samay '+tm+' hai.')}
+ if(has(/(\s)(help|madad)(\s)|kya kar sak|क्या कर सक|मदद/))return R('बोलिए: "Instagram का पासवर्ड", "अकाउंट्स की लिस्ट", "नया पासवर्ड बनाओ" या "लॉक करो"।','Bolo: "Instagram ka password", "accounts ki list", "naya password banao" ya "lock karo".');
+ window.__unk=true;return R('मैंने सुना: "'+t+'"। ये मुझे समझ नहीं आया। "help" बोलकर देखिए।','Maine suna: "'+t+'". Ye mujhe samajh nahi aaya. "help" bolkar dekho.')};
+})();
+}catch(e){console.error("PassFast module 5 failed:",e)}
+
+/* ---- module 6 ---- */
+try{
+/*VOICE_ACTIONS*/
+(function(){
+var base=localReply,pend=null,pt=0;
+var hi=function(){return LANG==='hi-IN'},R=function(d,l){return hi()?d:l};
+function dlg(sub){try{$('setdlg').showModal()}catch(e){}if(sub){[].forEach.call(document.querySelectorAll('#setdlg details.sec > summary'),function(sm){if(sm.textContent.indexOf(sub)>=0)sm.parentNode.open=true})}}
+function brand(x){for(var k in alias){if(alias[k].some(function(w){return x.indexOf(String(w).toLowerCase())>=0}))return k}return ''}
+localReply=function(t){
+ var x=' '+String(t).toLowerCase().replace(/[?!.,।]/g,' ')+' ',has=function(re){return re.test(x)};
+ if(pend&&Date.now()-pt<20000){var pd=pend;pend=null;
+  if(has(/(\s)(haan|han|haa|ha|yes|confirm|pakka)(\s)|हाँ|हां|पक्का|कर दो|ठीक है/))return pd();
+  if(has(/(\s)(nahi|nahin|no|cancel|ruko|mat)(\s)|नहीं|रुको|मत|कैंसल/))return R('ठीक है, रद्द कर दिया।','Theek hai, cancel kar diya.')}
+ pend=null;
+ var ids=findBy(t),one=ids.length===1?ids[0]:-1,v=one>=0?vault[one]:null;
+ if(v){
+  if(has(/delete|remove|hata|mita|हटा|मिटा|डिलीट/)){var nm=v.n;pend=function(){del(one);return R(nm+' डिलीट कर दिया।',nm+' delete kar diya.')};pt=Date.now();return R('पक्का '+nm+' डिलीट करूँ? हाँ या नहीं बोलिए।','Pakka '+nm+' delete karoon? Haan ya nahi bolo.')}
+  if(has(/edit|badal|change|बदल|एडिट|सुधार/)){window.__startEdit(one);return R(v.n+' का एडिट फ़ॉर्म खोल दिया।',v.n+' ka edit form khol diya.')}
+  if(has(/copy|kapi|कॉपी|कापी/)){show(one);cp(one,has(/username|user|यूज़रनेम|यूजरनेम/)?'u':'p');return R('कॉपी कर रहा हूँ। न हो तो Copy बटन दबाइए।','Copy kar raha hoon. Na ho to Copy button dabao.')}
+ }
+ if(has(/(naya|new|add|save|jod|नया|सेव|जोड़)/)&&brand(x)&&!has(/generate|bana/)){var b=brand(x);try{$('ptype').value='login';$('ptype').dispatchEvent(new Event('change'));$('n').value=b.charAt(0).toUpperCase()+b.slice(1);$('u').focus()}catch(e){}return R('फ़ॉर्म खोल दिया, नाम भर दिया। अब यूज़रनेम और पासवर्ड लिखिए।','Form khol diya, naam bhar diya. Ab username aur password likho.')}
+ if(has(/auto.?lock|ऑटो.?लॉक|ऑटोलॉक/)){var n=(x.match(/\d+/)||[])[0];if(n&&['1','5','15'].indexOf(n)>=0){$('alsel').value=n;$('alsel').onchange();return R('ऑटो-लॉक '+n+' मिनट कर दिया।','Auto-lock '+n+' minute kar diya.')}return R('ऑटो-लॉक 1, 5 या 15 मिनट हो सकता है।','Auto-lock 1, 5 ya 15 minute ho sakta hai.')}
+ if(has(/mode|theme|थीम|मोड/)){var th=has(/dark|डार्क|अंधेरा|काला/)?'dark':has(/light|लाइट|उजाला|सफ़ेद|सफेद/)?'light':has(/auto|ऑटो/)?'auto':'';if(th){$('thsel').value=th;$('thsel').onchange();return R('थीम '+th+' कर दी।','Theme '+th+' kar diya.')}}
+ if(has(/(english|इंग्लिश|अंग्रेज)/)&&has(/(me|mein|में|bol|badal|switch|बदल)/)){if(hi())$('lang').click();return R('English on.','English me bol raha hoon.')}
+ if(has(/(hindi|हिंदी|हिन्दी)/)&&has(/(me|mein|में|bol|badal|switch|बदल)/)){if(!hi())$('lang').click();return R('अब हिंदी में बोलूँगा।','Ab Hindi me bolunga.')}
+
+ if(has(/backup|बैकअप/)){dlg('Backup');return R('बैकअप सेक्शन खोल दिया।','Backup section khol diya. "Backup file banao" dabao.')}
+ if(has(/(mic|माइक|awaaz|आवाज़|आवाज)/)&&has(/(setting|सेटिंग)/)){dlg('Mic');try{$('micsec').open=true}catch(e){}return R('माइक सेटिंग खोल दी।','Mic settings khol di.')}
+ if(has(/(setting|सेटिंग)/)){dlg();return R('सेटिंग खोल दी।','Settings khol di.')}
+ if(has(/(kamzor|weak|कमज़ोर|कमजोर|health|हेल्थ|strength|reuse|repeat|purane|पुराने|पुराना)/)&&has(/password|पासवर्ड/)){
+  var lg=vault.filter(function(a){return(a.t||'login')==='login'&&a.p}),cnt={};lg.forEach(function(a){cnt[a.p]=(cnt[a.p]||0)+1});
+  var wk=lg.filter(function(a){return window.__score(a.p)<=1}).length,rp=lg.filter(function(a){return cnt[a.p]>1}).length,od=vault.filter(function(a){return a.ts&&Date.now()-a.ts>6*2629800000}).length;
+  return R('कुल '+lg.length+' लॉगिन: '+wk+' कमज़ोर, '+rp+' दोहराए हुए, '+od+' 6 महीने से पुराने।','Total '+lg.length+' login: '+wk+' kamzor, '+rp+' repeat, '+od+' 6 mahine se purane.')}
+ var m=x.match(/(\d+(?:\.\d+)?)\s*(plus|\+|jod|जोड़|minus|-|ghata|घटा|into|x|\*|guna|गुणा|divide|\/|bhag|भाग)\s*(\d+(?:\.\d+)?)/);
+ if(m){var a=+m[1],c=+m[3],o=m[2],r=/plus|\+|jod|जोड़/.test(o)?a+c:/minus|-|ghata|घटा/.test(o)?a-c:/into|x|\*|guna|गुणा/.test(o)?a*c:(c?a/c:NaN);if(isFinite(r)){r=Math.round(r*1e6)/1e6;return R('जवाब '+r+' है।','Jawab '+r+' hai.')}return R('शून्य से भाग नहीं हो सकता।','Zero se bhaag nahi ho sakta.')}
+ if(has(/(\s)(help|madad)(\s)|kya kar sak|क्या कर सक|मदद/))return R('मैं ये कर सकता हूँ: पासवर्ड दिखाना, कॉपी, एडिट, डिलीट (हाँ पूछकर), नया जोड़ना, पासवर्ड बनाना, लिस्ट, हेल्थ चेक, थीम, ऑटो-लॉक, सेटिंग, बैकअप, लॉक, समय-तारीख और हिसाब।','Main ye kar sakta hoon: password dikhana, copy, edit, delete (haan puchkar), naya jodna, password banana, list, health check, theme, auto-lock, settings, backup, lock, time-date aur hisaab.');
+ return base(t)};
+window.__localFirst=function(t){window.__unk=false;var r=localReply(t);return window.__unk?null:r};
+})();
+}catch(e){console.error("PassFast module 6 failed:",e)}
+
+/* ---- module 7 ---- */
+try{
+(function(){var u=0;function unlock(){if(u)return;u=1;try{var x=new SpeechSynthesisUtterance(' ');x.volume=0;speechSynthesis.speak(x)}catch(e){}}
+['pointerdown','keydown','touchstart'].forEach(function(e){addEventListener(e,unlock,{once:true,passive:true})});try{speechSynthesis.getVoices()}catch(e){}})();
+}catch(e){console.error("PassFast module 7 failed:",e)}
+
+/* ---- module 8 ---- */
+try{
+window.I18N={"src": ["PassFast 🔐 Private Password Vault", "Language", "Fingerprint", "Vault ID", "Master Password", "Master Password dobara", "Settings", "Bolo", "Yahan likho ya keyboard ke 🎤 se bolo...", "Type", "Kiska? (ya apna naam likho)", "Voice naam (jis naam se bulaoge)", "Username / Email / Number", "Expiry MM/YY", "Password", "Note likho...", "About", "Close", "Theme", "Mic ka naam (jaise Jarvis, Friday)", "Backup text yahan aayega / restore ke liye yahan paste karo", "Backup wala Master Password", "Purana password", "Naya password (8+, letters + numbers)", "Naya password dobara", "Search karo...", "Hinglish", "English", "हिन्दी", "TOUCH TO UNLOCK", "👆 Fingerprint se kholo", "🔑 Password se kholo", "PassFast", "Pehli baar hai? Ek Master Password banao. Ye yaad rakhna, ye kahin save nahi hota!", "Khol do 🔓", "PassFast 🔐", "Mic dabao aur bolo:", "\"Instagram ka password\"", "Lock 🔒", "J.A.R.V.I.S. ONLINE · TAP KARO", "⚡ Bolne ke baad khud bhej do (keyboard 🎤 ke liye)", "➕ Naya password save karo", "🔑 Login / Password", "💳 ATM / Credit card", "📱 UPI", "📝 Secure note", "🔢 2FA code", "Jaise \"mera pehla mail\". 🎤 dabake bolo, jaisa sunega waisa hi save karega, to match pakka hoga.", "🎲 Strong password banao", "Save karo ✅", "Cancel", "🔘 Mere buttons", "Button dabao, uska password aa jayega. Naya naam likhoge to uska bhi button ban jayega.", "👑 ORGANISER", "S.K Aayan", "Ye application S.K Aayan ki hai.", "bit encryption", "server", "bhashayein", "Kyun banaya?", "Har app ka alag password yaad rakhna mushkil hai. PassFast aapke saare passwords ek safe tijori me rakhta hai, aur aap bolkar ya likhkar turant nikaal sakte ho.", "Kaise bana?", "Idea", "Organiser S.K Aayan ka concept: private, tez aur bolkar chalne wali tijori.", "Design", "Jarvis jaisa voice assistant aur neon look.", "Security", "AES-256 encryption, Master Password se lock.", "Launch", "Seedhi website, HTTPS par, bina kisi server ke.", "Shuru karo →", "© 2026 PassFast · Organiser: S.K Aayan", "⚙️ Settings", "ℹ️ About aur Organiser", "🌓 Auto theme", "☀️ Light", "🌙 Dark", "⏱ Auto-lock", "1 minute", "5 minute", "15 minute", "10 galat tries ke baad vault mita do", "🎙️ Mic aur Awaaz", "🩺 Mic check", "Mic sun nahi raha? Ye dabao, ye batayega dikkat kahan hai.", "Mic check karo 🔍", "🔊 Awaaz settings", "Jarvis bol ke jawab de", "Speed", "Pitch", "Test karo 🔈", "⚙️ Mic settings", "Pehle mic ka naam bolna zaroori ho", "\"Hamesha sunna\" ON karo to Jarvis ki tarah baat-cheet chalti rahegi. Is mode me upar wala naam-tick laga lo, taaki wo sirf tumhari baat sune.", "💾 Backup aur Restore", "Backup file encrypted hoti hai. Isse kholne ke liye wahi Master Password chahiye jo backup ke waqt tha.", "⬇️ Backup file banao", "📋 Text copy karo", "📂 File se restore", "Restore karo (vault me jodo)", "🔑 Master Password badlo", "Password badlo", "🔐 Fingerprint Setup", "Ek baar set karo. Fir har baar vault", "fingerprint ya password", ", dono me se kisi se bhi khulega.", "Tarika 1: Phone Passkey Fingerprint", "Tarika 2: Chrome Fingerprint (sabse pakka)", "Master Password dobara daalo, main Chrome ko save karne bolta hoon. Fir fingerprint se hi bhar jayega.", "Chrome me set karo 🔑", "Phir Chrome ⋮ → Settings → Password Manager → Settings →", "\"Use screen lock when filling passwords\"", "ON karo.", "Master Password hamesha backup hai, bhoolna mat.", "📋 Saved accounts", "Sab data tere phone/browser me encrypted (AES-256) save hota hai. Kisi server pe nahi jaata. Browser data clear kiya toh vault bhi jayega.", "Privacy Policy", "Terms & Conditions", "Band karo", "🍪 Cookies nahi, sirf localStorage.", "Vault aapke device me rehta hai. Anonymous analytics (agar owner ne ON kiya ho) ke liye aapki ijazat chahiye.", "Haan, theek hai", "Nahi", "Cookie notice", "Aapka data sirf aapke phone me, encrypted rehta hai.", "PassFast koi data apne server par nahi bhejta.", "Master Password kahin save nahi hota aur recover nahi ho sakta.", "Hum cookies nahi use karte, sirf localStorage use hota hai.", "Voice sunne ke liye browser apni speech service use kar sakta hai.", "PassFast personal use ke liye hai.", "Bank PIN aur OTP yahan mat rakho.", "Master Password bhoolne ya data clear hone par data wapas nahi milta.", "Service jaisi hai waisi di jaati hai, bina guarantee ke.", "Kisi aur ka password bina ijazat save karna mana hai.", "Card number", "CVV", "UPI ID (naam@bank)", "UPI PIN", "Account / email", "2FA secret key (ya otpauth link)", "ORGANISER", "Welcome back! Master Password daalo.", "Kam se kam 6 character rakho.", "Dono password match nahi hue.", "ACCESS GRANTED ✓", "Access mil gaya ✅", "Galat Master Password ❌", "ACCESS DENIED", "❌ Master Password daalo.", "❌ Galat Master Password.", "Dekho", "🗑 Delete", "✏️ Edit", "Copy", "Username", "Expiry", "2FA code", "Abhi koi button nahi. Neeche se password save karo.", "Abhi kuch save nahi hai.", "🤔 soch raha hoon...", "LISTENING...", "Sun raha hoon... bolo 🎧", "Naam bolo...", "Mic blocked hai 🔒 Neeche box me keyboard ka 🎤 dabake bolo 👇", "Copy ho gaya ✅", "15 second me chhup jayega", "Kaunsa account?", "Dikhao", "Auto voice", "🗑 Delete / Unsave karo", "Pakka? Dobara dabao ❗", "Master Password bhool gaye? Naya vault banao", "Haan, mita do", "Password badalne se pehle email code zaroori ho", "📨 Code bhejo", "Email ka 6 ank wala code", "✔️ Verify karo", "🛟 Google Recovery (Password bhool jaao to)", "Pehle Google se login karke recovery ON karo. Phir Master Password bhoolne par Google email ke OTP se naya password ban jayega aur data wahi rahega.", "🛟 Recovery ON karo", "Recovery band karo", "🛟 Password bhool gaye? Google se recover karo", "🛟 Google se recovery", "📨 OTP bhejo", "Email ka 6 ank wala OTP", "✔️ OTP verify karo", "Naya Master Password (8+, letters + numbers)", "Naya password set karo", "📱 Phone se register karo", "Pehle mobile number verify karo. Phir Master Password banao. Password bhoolne par isi number ke OTP se naya password ban sakta hai.", "Mobile number (10 ank, ya +country code)", "SMS ka 6 ank wala OTP", "Bina phone ke aage badho (recovery nahi hogi)", "📱 Password bhool gaye? Phone OTP se naya banao", "📱 Phone se recovery", "📱 Phone Recovery (Password bhool jaao to)", "Phone number se OTP lekar recovery ON karo. Phir Master Password bhoolne par isi number ke OTP se naya password ban jayega aur data wahi rahega.", "🤖 Jarvis se khuli baatcheet (AI, internet se)"], "en": ["PassFast 🔐 Private Password Vault", "Language", "", "Vault ID", "Master Password", "Master Password again", "Settings", "Speak", "Type here or speak with the keyboard 🎤...", "Type", "For which app? (or type a name)", "Voice name (what you will say)", "Username / Email / Number", "Expiry MM/YY", "Password", "Write a note...", "About", "Close", "Theme", "Mic name (e.g. Jarvis, Friday)", "Backup text appears here / paste here to restore", "Master Password of the backup", "Old password", "New password (8+, letters + numbers)", "New password again", "Search...", "", "", "", "", "", "", "", "First time? Create a Master Password. Remember it, it is not saved anywhere!", "Unlock 🔓", "", "Tap the mic and say:", "“Instagram password”", "Lock 🔒", "J.A.R.V.I.S. ONLINE · TAP TO SPEAK", "⚡ Send automatically after speaking (for keyboard 🎤)", "➕ Save a new item", "🔑 Login / Password", "💳 ATM / Credit card", "", "📝 Secure note", "🔢 2FA code", "For example “my first mail”. Tap 🎤 and speak; it saves exactly what it hears, so matching is reliable.", "🎲 Generate strong password", "Save ✅", "Cancel", "🔘 My buttons", "Tap a button to see its details. A new name gets its own button.", "👑 ORGANISER", "", "This application belongs to S.K Aayan.", "bit encryption", "servers", "languages", "Why was it made?", "Remembering a different password for every app is hard. PassFast keeps all your passwords in one safe vault, and you can bring them up instantly by speaking or typing.", "How was it built?", "Idea", "Organiser S.K Aayan’s concept: a private, fast vault you can run by voice.", "Design", "A Jarvis-style voice assistant and a neon look.", "Security", "AES-256 encryption, locked with your Master Password.", "Launch", "A simple website over HTTPS, with no server.", "Get started →", "© 2026 PassFast · Organiser: S.K Aayan", "⚙️ Settings", "ℹ️ About & Organiser", "🌓 Auto theme", "☀️ Light", "🌙 Dark", "⏱ Auto-lock", "1 minute", "5 minutes", "15 minutes", "Erase the vault after 10 wrong tries", "🎙️ Mic & Voice", "🩺 Mic check", "Mic not working? Tap this to find the problem.", "Run mic check 🔍", "🔊 Voice settings", "Jarvis answers aloud", "Speed", "Pitch", "Test 🔈", "⚙️ Mic settings", "Require the mic name first", "“Always listening” keeps a Jarvis-style conversation going. In this mode tick the name box above so it only hears you.", "💾 Backup & Restore", "The backup file is encrypted. To open it you need the Master Password from when it was made.", "⬇️ Create backup file", "📋 Copy text", "📂 Restore from file", "Restore (add into vault)", "🔑 Change Master Password", "Change password", "", "", "", "", "", "", "", "", "", "", "", "", "📋 Saved accounts", "All data is saved encrypted (AES-256) in your phone/browser. It never goes to any server. Clearing browser data also deletes the vault.", "Privacy Policy", "Terms & Conditions", "Close", "🍪 No cookies, only localStorage.", "Your vault stays on your device. Anonymous analytics (if the owner turns it on) needs your permission.", "Yes, OK", "No", "Cookie notice", "Your data stays only on your phone, encrypted.", "PassFast does not send any data to its servers.", "The Master Password is not saved anywhere and cannot be recovered.", "We do not use cookies, only localStorage.", "For listening, the browser may use its own speech service.", "PassFast is for personal use.", "Do not store bank PINs or OTPs here.", "If you forget the Master Password or clear data, it cannot be recovered.", "The service is provided as is, without warranty.", "Saving someone else’s password without permission is not allowed.", "Card number", "CVV", "UPI ID (name@bank)", "UPI PIN", "Account / email", "2FA secret key (or otpauth link)", "ORGANISER", "Welcome back! Enter your Master Password.", "Use at least 6 characters.", "The two passwords do not match.", "ACCESS GRANTED ✓", "Access granted ✅", "Wrong Master Password ❌", "ACCESS DENIED", "❌ Enter the Master Password.", "❌ Wrong Master Password.", "View", "🗑 Delete", "✏️ Edit", "Copy", "Username", "Expiry", "2FA code", "No buttons yet. Save a password below.", "Nothing is saved yet.", "🤔 thinking...", "LISTENING...", "Listening... speak 🎧", "Say the name...", "Mic is blocked 🔒 Use the keyboard 🎤 in the box below 👇", "Copied ✅", "Hides in 15 seconds", "Which account?", "Show", "Auto voice", "🗑 Delete / Unsave", "Sure? Tap again ❗", "Forgot the Master Password? Create a new vault", "Yes, erase it", "Require an email code before changing the password", "📨 Send code", "Email code (6 digits)", "✔️ Verify", "🛟 Google Recovery (if you forget the password)", "First sign in with Google and turn recovery ON. Then if you forget the Master Password, a Google email OTP lets you set a new one and your data stays.", "🛟 Turn recovery ON", "Turn recovery off", "🛟 Forgot the password? Recover with Google", "🛟 Recover with Google", "📨 Send OTP", "Email OTP (6 digits)", "✔️ Verify OTP", "New Master Password (8+, letters + numbers)", "Set new password", "📱 Register with phone", "First verify your mobile number. Then create your Master Password. If you forget it, an OTP to this number lets you set a new one.", "Mobile number (10 digits, or +country code)", "6-digit SMS OTP", "Continue without phone (no recovery)", "📱 Forgot the password? Set a new one with phone OTP", "📱 Recover with phone", "📱 Phone Recovery (if you forget the password)", "Turn recovery ON with an OTP to your phone number. If you forget the Master Password, an OTP to this number lets you set a new one and your data stays.", "🤖 Open conversation with Jarvis (AI, online)"], "hi": ["PassFast 🔐 निजी पासवर्ड तिजोरी", "भाषा", "", "वॉल्ट आईडी", "मास्टर पासवर्ड", "मास्टर पासवर्ड दोबारा", "सेटिंग", "बोलिए", "यहाँ लिखिए या कीबोर्ड के 🎤 से बोलिए...", "प्रकार", "किसका? (या अपना नाम लिखिए)", "वॉइस नाम (जिस नाम से बुलाएँगे)", "यूज़रनेम / ईमेल / नंबर", "एक्सपायरी MM/YY", "पासवर्ड", "नोट लिखिए...", "परिचय", "बंद करें", "थीम", "माइक का नाम (जैसे जार्विस, फ्राइडे)", "बैकअप टेक्स्ट यहाँ आएगा / रिस्टोर के लिए यहाँ पेस्ट करें", "बैकअप वाला मास्टर पासवर्ड", "पुराना पासवर्ड", "नया पासवर्ड (8+, अक्षर + अंक)", "नया पासवर्ड दोबारा", "खोजिए...", "", "", "", "", "", "", "", "पहली बार? एक मास्टर पासवर्ड बनाइए। इसे याद रखिए, यह कहीं सेव नहीं होता!", "खोलो 🔓", "", "माइक दबाइए और बोलिए:", "“इंस्टाग्राम का पासवर्ड”", "लॉक 🔒", "J.A.R.V.I.S. ऑनलाइन · टैप करें", "⚡ बोलने के बाद अपने-आप भेजो (कीबोर्ड 🎤 के लिए)", "➕ नया आइटम सेव करें", "🔑 लॉगिन / पासवर्ड", "💳 एटीएम / क्रेडिट कार्ड", "", "📝 सुरक्षित नोट", "🔢 2FA कोड", "जैसे “मेरा पहला मेल”। 🎤 दबाकर बोलिए, जैसा सुनेगा वैसा ही सेव करेगा, तो मैच पक्का होगा।", "🎲 मज़बूत पासवर्ड बनाएँ", "सेव करें ✅", "रद्द करें", "🔘 मेरे बटन", "बटन दबाइए, उसका पासवर्ड आ जाएगा। नया नाम लिखेंगे तो उसका भी बटन बन जाएगा।", "👑 आयोजक", "", "यह एप्लिकेशन S.K Aayan की है।", "बिट एन्क्रिप्शन", "सर्वर", "भाषाएँ", "क्यों बनाया?", "हर ऐप का अलग पासवर्ड याद रखना मुश्किल है। PassFast आपके सारे पासवर्ड एक सुरक्षित तिजोरी में रखता है, और आप बोलकर या लिखकर तुरंत निकाल सकते हैं।", "कैसे बना?", "आइडिया", "आयोजक S.K Aayan का कॉन्सेप्ट: निजी, तेज़ और बोलकर चलने वाली तिजोरी।", "डिज़ाइन", "जार्विस जैसा वॉइस असिस्टेंट और नियॉन लुक।", "सुरक्षा", "AES-256 एन्क्रिप्शन, मास्टर पासवर्ड से लॉक।", "लॉन्च", "सीधी वेबसाइट, HTTPS पर, बिना किसी सर्वर के।", "शुरू करें →", "© 2026 PassFast · आयोजक: S.K Aayan", "⚙️ सेटिंग", "ℹ️ परिचय और आयोजक", "🌓 ऑटो थीम", "☀️ लाइट", "🌙 डार्क", "⏱ ऑटो-लॉक", "1 मिनट", "5 मिनट", "15 मिनट", "10 गलत कोशिशों के बाद वॉल्ट मिटा दो", "🎙️ माइक और आवाज़", "🩺 माइक जाँच", "माइक नहीं सुन रहा? इसे दबाइए, यह बताएगा दिक्कत कहाँ है।", "माइक जाँचें 🔍", "🔊 आवाज़ सेटिंग", "जार्विस बोलकर जवाब दे", "रफ़्तार", "पिच", "टेस्ट करें 🔈", "⚙️ माइक सेटिंग", "पहले माइक का नाम बोलना ज़रूरी हो", "“हमेशा सुनना” ON करें तो जार्विस की तरह बातचीत चलती रहेगी। इस मोड में ऊपर वाला नाम-टिक लगा लें, ताकि वह सिर्फ़ आपकी बात सुने।", "💾 बैकअप और रिस्टोर", "बैकअप फ़ाइल एन्क्रिप्टेड होती है। इसे खोलने के लिए वही मास्टर पासवर्ड चाहिए जो बैकअप के समय था।", "⬇️ बैकअप फ़ाइल बनाएँ", "📋 टेक्स्ट कॉपी करें", "📂 फ़ाइल से रिस्टोर", "रिस्टोर करें (वॉल्ट में जोड़ें)", "🔑 मास्टर पासवर्ड बदलें", "पासवर्ड बदलें", "", "", "", "", "", "", "", "", "", "", "", "", "📋 सेव किए अकाउंट", "सारा डेटा आपके फ़ोन/ब्राउज़र में एन्क्रिप्टेड (AES-256) सेव होता है। किसी सर्वर पर नहीं जाता। ब्राउज़र डेटा क्लियर करने पर वॉल्ट भी चला जाएगा।", "गोपनीयता नीति", "नियम और शर्तें", "बंद करें", "🍪 कुकीज़ नहीं, सिर्फ़ localStorage।", "वॉल्ट आपके डिवाइस में रहता है। गुमनाम एनालिटिक्स (अगर मालिक ने चालू किया हो) के लिए आपकी इजाज़त चाहिए।", "हाँ, ठीक है", "नहीं", "कुकी सूचना", "आपका डेटा सिर्फ़ आपके फ़ोन में, एन्क्रिप्टेड रहता है।", "PassFast कोई डेटा अपने सर्वर पर नहीं भेजता।", "मास्टर पासवर्ड कहीं सेव नहीं होता और रिकवर नहीं हो सकता।", "हम कुकीज़ नहीं इस्तेमाल करते, सिर्फ़ localStorage इस्तेमाल होता है।", "आवाज़ सुनने के लिए ब्राउज़र अपनी स्पीच सर्विस इस्तेमाल कर सकता है।", "PassFast निजी इस्तेमाल के लिए है।", "बैंक पिन और OTP यहाँ मत रखिए।", "मास्टर पासवर्ड भूलने या डेटा क्लियर होने पर डेटा वापस नहीं मिलता।", "सर्विस जैसी है वैसी दी जाती है, बिना किसी गारंटी के।", "किसी और का पासवर्ड बिना इजाज़त सेव करना मना है।", "कार्ड नंबर", "CVV", "UPI आईडी (नाम@बैंक)", "UPI पिन", "अकाउंट / ईमेल", "2FA सीक्रेट की (या otpauth लिंक)", "आयोजक", "वापसी पर स्वागत! मास्टर पासवर्ड डालिए।", "कम से कम 6 अक्षर रखिए।", "दोनों पासवर्ड मैच नहीं हुए।", "एक्सेस मिल गया ✓", "एक्सेस मिल गया ✅", "गलत मास्टर पासवर्ड ❌", "एक्सेस नामंज़ूर", "❌ मास्टर पासवर्ड डालिए।", "❌ गलत मास्टर पासवर्ड।", "देखो", "🗑 हटाएँ", "✏️ बदलें", "कॉपी", "यूज़रनेम", "एक्सपायरी", "2FA कोड", "अभी कोई बटन नहीं। नीचे से पासवर्ड सेव कीजिए।", "अभी कुछ सेव नहीं है।", "🤔 सोच रहा हूँ...", "सुन रहा हूँ...", "सुन रहा हूँ... बोलिए 🎧", "नाम बोलिए...", "माइक ब्लॉक है 🔒 नीचे बॉक्स में कीबोर्ड का 🎤 दबाकर बोलिए 👇", "कॉपी हो गया ✅", "15 सेकंड में छिप जाएगा", "कौन सा अकाउंट?", "दिखाओ", "ऑटो आवाज़", "🗑 हटाएँ / अनसेव करें", "पक्का? दोबारा दबाइए ❗", "मास्टर पासवर्ड भूल गए? नया वॉल्ट बनाइए", "हाँ, मिटा दो", "पासवर्ड बदलने से पहले ईमेल कोड ज़रूरी हो", "📨 कोड भेजें", "ईमेल का 6 अंक का कोड", "✔️ वेरिफ़ाई करें", "🛟 Google रिकवरी (पासवर्ड भूल जाएँ तो)", "पहले Google से लॉगिन करके रिकवरी ON करें। फिर मास्टर पासवर्ड भूलने पर Google ईमेल के OTP से नया पासवर्ड बन जाएगा और डेटा वही रहेगा।", "🛟 रिकवरी ON करें", "रिकवरी बंद करें", "🛟 पासवर्ड भूल गए? Google से रिकवर करें", "🛟 Google से रिकवरी", "📨 OTP भेजें", "ईमेल का 6 अंक का OTP", "✔️ OTP वेरिफ़ाई करें", "नया मास्टर पासवर्ड (8+, अक्षर + अंक)", "नया पासवर्ड सेट करें", "📱 फ़ोन से रजिस्टर करें", "पहले मोबाइल नंबर वेरिफ़ाई करें। फिर मास्टर पासवर्ड बनाएँ। पासवर्ड भूलने पर इसी नंबर के OTP से नया पासवर्ड बन सकता है।", "मोबाइल नंबर (10 अंक, या +कंट्री कोड)", "SMS का 6 अंक का OTP", "बिना फ़ोन के आगे बढ़ें (रिकवरी नहीं होगी)", "📱 पासवर्ड भूल गए? फ़ोन OTP से नया बनाएँ", "📱 फ़ोन से रिकवरी", "📱 फ़ोन रिकवरी (पासवर्ड भूल जाएँ तो)", "फ़ोन नंबर के OTP से रिकवरी ON करें। फिर मास्टर पासवर्ड भूलने पर इसी नंबर के OTP से नया पासवर्ड बन जाएगा और डेटा वही रहेगा।", "🤖 Jarvis से खुली बातचीत (AI, इंटरनेट से)"], "ur": ["PassFast 🔐 نجی پاس ورڈ تجوری", "زبان", "", "والٹ آئی ڈی", "ماسٹر پاس ورڈ", "ماسٹر پاس ورڈ دوبارہ", "سیٹنگز", "بولیے", "یہاں لکھیں یا کی بورڈ کے 🎤 سے بولیں...", "قسم", "کس کا؟ (یا اپنا نام لکھیں)", "وائس نام (جس نام سے پکاریں گے)", "یوزر نیم / ای میل / نمبر", "میعاد MM/YY", "پاس ورڈ", "نوٹ لکھیں...", "تعارف", "بند کریں", "تھیم", "مائیک کا نام (جیسے جارویس، فرائیڈے)", "بیک اپ ٹیکسٹ یہاں آئے گا / بحال کرنے کے لیے یہاں پیسٹ کریں", "بیک اپ والا ماسٹر پاس ورڈ", "پرانا پاس ورڈ", "نیا پاس ورڈ (8+، حروف + اعداد)", "نیا پاس ورڈ دوبارہ", "تلاش کریں...", "", "", "", "", "", "", "", "پہلی بار؟ ایک ماسٹر پاس ورڈ بنائیں۔ اسے یاد رکھیں، یہ کہیں محفوظ نہیں ہوتا!", "کھولیں 🔓", "", "مائیک دبائیں اور بولیں:", "“انسٹاگرام کا پاس ورڈ”", "لاک 🔒", "J.A.R.V.I.S. آن لائن · ٹیپ کریں", "⚡ بولنے کے بعد خود بھیج دیں (کی بورڈ 🎤 کے لیے)", "➕ نیا آئٹم محفوظ کریں", "🔑 لاگ ان / پاس ورڈ", "💳 اے ٹی ایم / کریڈٹ کارڈ", "", "📝 محفوظ نوٹ", "🔢 2FA کوڈ", "جیسے “میرا پہلا میل”۔ 🎤 دبا کر بولیں، جیسا سنے گا ویسا ہی محفوظ کرے گا، تو میچ پکا ہوگا۔", "🎲 مضبوط پاس ورڈ بنائیں", "محفوظ کریں ✅", "منسوخ", "🔘 میرے بٹن", "بٹن دبائیں، اس کا پاس ورڈ آ جائے گا۔ نیا نام لکھیں گے تو اس کا بھی بٹن بن جائے گا۔", "👑 منتظم", "", "یہ ایپلیکیشن S.K Aayan کی ہے۔", "بٹ انکرپشن", "سرور", "زبانیں", "کیوں بنایا؟", "ہر ایپ کا الگ پاس ورڈ یاد رکھنا مشکل ہے۔ PassFast آپ کے تمام پاس ورڈ ایک محفوظ تجوری میں رکھتا ہے، اور آپ بول کر یا لکھ کر فوراً نکال سکتے ہیں۔", "کیسے بنا؟", "آئیڈیا", "منتظم S.K Aayan کا تصور: نجی، تیز اور آواز سے چلنے والی تجوری۔", "ڈیزائن", "جارویس جیسا وائس اسسٹنٹ اور نیون لُک۔", "سیکیورٹی", "AES-256 انکرپشن، ماسٹر پاس ورڈ سے لاک۔", "لانچ", "سیدھی ویب سائٹ، HTTPS پر، بغیر کسی سرور کے۔", "شروع کریں ←", "© 2026 PassFast · منتظم: S.K Aayan", "⚙️ سیٹنگز", "ℹ️ تعارف اور منتظم", "🌓 آٹو تھیم", "☀️ لائٹ", "🌙 ڈارک", "⏱ آٹو لاک", "1 منٹ", "5 منٹ", "15 منٹ", "10 غلط کوششوں کے بعد والٹ مٹا دیں", "🎙️ مائیک اور آواز", "🩺 مائیک جانچ", "مائیک نہیں سن رہا؟ اسے دبائیں، یہ بتائے گا مسئلہ کہاں ہے۔", "مائیک جانچیں 🔍", "🔊 آواز کی سیٹنگز", "جارویس بول کر جواب دے", "رفتار", "پچ", "ٹیسٹ کریں 🔈", "⚙️ مائیک سیٹنگز", "پہلے مائیک کا نام بولنا ضروری ہو", "“ہمیشہ سننا” آن کریں تو جارویس کی طرح بات چیت چلتی رہے گی۔ اس موڈ میں اوپر والا نام ٹک لگا لیں تاکہ وہ صرف آپ کی بات سنے۔", "💾 بیک اپ اور بحالی", "بیک اپ فائل انکرپٹڈ ہوتی ہے۔ اسے کھولنے کے لیے وہی ماسٹر پاس ورڈ چاہیے جو بیک اپ کے وقت تھا۔", "⬇️ بیک اپ فائل بنائیں", "📋 ٹیکسٹ کاپی کریں", "📂 فائل سے بحال کریں", "بحال کریں (والٹ میں شامل کریں)", "🔑 ماسٹر پاس ورڈ بدلیں", "پاس ورڈ بدلیں", "", "", "", "", "", "", "", "", "", "", "", "", "📋 محفوظ اکاؤنٹس", "تمام ڈیٹا آپ کے فون/براؤزر میں انکرپٹڈ (AES-256) محفوظ ہوتا ہے۔ کسی سرور پر نہیں جاتا۔ براؤزر ڈیٹا صاف کرنے سے والٹ بھی چلا جائے گا۔", "پرائیویسی پالیسی", "شرائط و ضوابط", "بند کریں", "🍪 کوکیز نہیں، صرف localStorage۔", "والٹ آپ کے ڈیوائس میں رہتا ہے۔ گمنام اینالیٹکس (اگر مالک نے آن کیا ہو) کے لیے آپ کی اجازت درکار ہے۔", "ہاں، ٹھیک ہے", "نہیں", "کوکی اطلاع", "آپ کا ڈیٹا صرف آپ کے فون میں، انکرپٹڈ رہتا ہے۔", "PassFast کوئی ڈیٹا اپنے سرور پر نہیں بھیجتا۔", "ماسٹر پاس ورڈ کہیں محفوظ نہیں ہوتا اور بازیافت نہیں ہو سکتا۔", "ہم کوکیز استعمال نہیں کرتے، صرف localStorage استعمال ہوتا ہے۔", "آواز سننے کے لیے براؤزر اپنی اسپیچ سروس استعمال کر سکتا ہے۔", "PassFast ذاتی استعمال کے لیے ہے۔", "بینک پن اور او ٹی پی یہاں نہ رکھیں۔", "ماسٹر پاس ورڈ بھولنے یا ڈیٹا صاف ہونے پر ڈیٹا واپس نہیں ملتا۔", "سروس جیسی ہے ویسی دی جاتی ہے، بغیر کسی ضمانت کے۔", "کسی اور کا پاس ورڈ بغیر اجازت محفوظ کرنا منع ہے۔", "کارڈ نمبر", "CVV", "UPI آئی ڈی (نام@بینک)", "UPI پن", "اکاؤنٹ / ای میل", "2FA خفیہ کلید (یا otpauth لنک)", "منتظم", "خوش آمدید! ماسٹر پاس ورڈ درج کریں۔", "کم از کم 6 حروف رکھیں۔", "دونوں پاس ورڈ مماثل نہیں ہوئے۔", "رسائی مل گئی ✓", "رسائی مل گئی ✅", "غلط ماسٹر پاس ورڈ ❌", "رسائی مسترد", "❌ ماسٹر پاس ورڈ درج کریں۔", "❌ غلط ماسٹر پاس ورڈ۔", "دیکھیں", "🗑 حذف کریں", "✏️ ترمیم", "کاپی", "یوزر نیم", "میعاد", "2FA کوڈ", "ابھی کوئی بٹن نہیں۔ نیچے سے پاس ورڈ محفوظ کریں۔", "ابھی کچھ محفوظ نہیں ہے۔", "🤔 سوچ رہا ہوں...", "سن رہا ہوں...", "سن رہا ہوں... بولیں 🎧", "نام بولیں...", "مائیک بلاک ہے 🔒 نیچے باکس میں کی بورڈ کا 🎤 دبا کر بولیں 👇", "کاپی ہو گیا ✅", "15 سیکنڈ میں چھپ جائے گا", "کون سا اکاؤنٹ؟", "دکھائیں", "خودکار آواز", "🗑 حذف / ان سیو کریں", "پکا؟ دوبارہ دبائیں ❗", "ماسٹر پاس ورڈ بھول گئے؟ نیا والٹ بنائیں", "ہاں، مٹا دیں", "پاس ورڈ بدلنے سے پہلے ای میل کوڈ ضروری ہو", "📨 کوڈ بھیجیں", "ای میل کا 6 ہندسوں کا کوڈ", "✔️ تصدیق کریں", "🛟 گوگل ریکوری (پاس ورڈ بھول جائیں تو)", "پہلے گوگل سے لاگ ان کر کے ریکوری آن کریں۔ پھر ماسٹر پاس ورڈ بھولنے پر گوگل ای میل کے OTP سے نیا پاس ورڈ بن جائے گا اور ڈیٹا وہی رہے گا۔", "🛟 ریکوری آن کریں", "ریکوری بند کریں", "🛟 پاس ورڈ بھول گئے؟ گوگل سے ریکور کریں", "🛟 گوگل سے ریکوری", "📨 OTP بھیجیں", "ای میل کا 6 ہندسوں کا OTP", "✔️ OTP تصدیق کریں", "نیا ماسٹر پاس ورڈ (8+، حروف + اعداد)", "نیا پاس ورڈ سیٹ کریں", "📱 فون سے رجسٹر کریں", "پہلے موبائل نمبر کی تصدیق کریں۔ پھر ماسٹر پاس ورڈ بنائیں۔ بھولنے پر اسی نمبر کے OTP سے نیا پاس ورڈ بن سکتا ہے۔", "موبائل نمبر (10 ہندسے، یا +کنٹری کوڈ)", "SMS کا 6 ہندسوں کا OTP", "فون کے بغیر آگے بڑھیں (ریکوری نہیں ہوگی)", "📱 پاس ورڈ بھول گئے؟ فون OTP سے نیا بنائیں", "📱 فون سے ریکوری", "📱 فون ریکوری (پاس ورڈ بھول جائیں تو)", "فون نمبر کے OTP سے ریکوری آن کریں۔ ماسٹر پاس ورڈ بھولنے پر اسی نمبر کے OTP سے نیا پاس ورڈ بن جائے گا اور ڈیٹا وہی رہے گا۔", "🤖 جارویس سے کھلی گفتگو (AI، انٹرنیٹ سے)"], "fa": ["PassFast 🔐 گاوصندوق خصوصی رمز عبور", "زبان", "", "شناسه گاوصندوق", "رمز اصلی", "رمز اصلی را دوباره وارد کنید", "تنظیمات", "بگویید", "اینجا بنویسید یا با 🎤 صفحه‌کلید بگویید...", "نوع", "برای کدام برنامه؟ (یا نام بنویسید)", "نام صوتی (نامی که می‌گویید)", "نام کاربری / ایمیل / شماره", "انقضا MM/YY", "رمز عبور", "یادداشت بنویسید...", "درباره", "بستن", "پوسته", "نام میکروفون (مثلاً جارویس، فرایدی)", "متن پشتیبان اینجا می‌آید / برای بازیابی اینجا بچسبانید", "رمز اصلی پشتیبان", "رمز قبلی", "رمز جدید (۸+، حروف + اعداد)", "رمز جدید را دوباره وارد کنید", "جستجو...", "", "", "", "", "", "", "", "اولین بار؟ یک رمز اصلی بسازید. آن را به خاطر بسپارید، در جایی ذخیره نمی‌شود!", "باز کن 🔓", "", "میکروفون را بزنید و بگویید:", "«رمز اینستاگرام»", "قفل 🔒", "J.A.R.V.I.S. آنلاین · لمس کنید", "⚡ پس از گفتن خودکار ارسال شود (برای 🎤 صفحه‌کلید)", "➕ ذخیرهٔ مورد جدید", "🔑 ورود / رمز عبور", "💳 کارت بانکی / اعتباری", "", "📝 یادداشت امن", "🔢 کد 2FA", "مثلاً «اولین ایمیل من». 🎤 را بزنید و بگویید؛ دقیقاً همان‌چه می‌شنود ذخیره می‌شود، پس تطبیق مطمئن است.", "🎲 ساخت رمز قوی", "ذخیره ✅", "لغو", "🔘 دکمه‌های من", "دکمه را بزنید تا رمز آن نمایش داده شود. با نوشتن نام جدید، دکمهٔ آن هم ساخته می‌شود.", "👑 برگزارکننده", "", "این برنامه متعلق به S.K Aayan است.", "بیت رمزنگاری", "سرور", "زبان", "چرا ساخته شد؟", "به خاطر سپردن رمز جداگانه برای هر برنامه دشوار است. PassFast همهٔ رمزهای شما را در یک گاوصندوق امن نگه می‌دارد و با گفتن یا نوشتن، فوراً در دسترس شماست.", "چگونه ساخته شد؟", "ایده", "ایدهٔ برگزارکننده S.K Aayan: گاوصندوقی خصوصی، سریع و قابل‌کنترل با صدا.", "طراحی", "دستیار صوتی شبیه جارویس و ظاهر نئونی.", "امنیت", "رمزنگاری AES-256، قفل‌شده با رمز اصلی.", "انتشار", "وب‌سایت ساده روی HTTPS، بدون هیچ سرور.", "شروع کنید ←", "© 2026 PassFast · برگزارکننده: S.K Aayan", "⚙️ تنظیمات", "ℹ️ درباره و برگزارکننده", "🌓 پوستهٔ خودکار", "☀️ روشن", "🌙 تیره", "⏱ قفل خودکار", "۱ دقیقه", "۵ دقیقه", "۱۵ دقیقه", "پس از ۱۰ تلاش ناموفق، گاوصندوق پاک شود", "🎙️ میکروفون و صدا", "🩺 بررسی میکروفون", "میکروفون کار نمی‌کند؟ این را بزنید تا مشکل را بیابد.", "بررسی میکروفون 🔍", "🔊 تنظیمات صدا", "جارویس با صدا پاسخ دهد", "سرعت", "زیر و بمی", "آزمایش 🔈", "⚙️ تنظیمات میکروفون", "ابتدا گفتن نام میکروفون الزامی باشد", "«شنیدن دائمی» را روشن کنید تا گفتگو مانند جارویس ادامه یابد. در این حالت گزینهٔ نام بالا را فعال کنید تا فقط صدای شما را بشنود.", "💾 پشتیبان‌گیری و بازیابی", "فایل پشتیبان رمزگذاری شده است. برای گشودن آن همان رمز اصلیِ زمان پشتیبان‌گیری لازم است.", "⬇️ ساخت فایل پشتیبان", "📋 کپی متن", "📂 بازیابی از فایل", "بازیابی (افزودن به گاوصندوق)", "🔑 تغییر رمز اصلی", "تغییر رمز", "", "", "", "", "", "", "", "", "", "", "", "", "📋 حساب‌های ذخیره‌شده", "همهٔ داده‌ها رمزگذاری‌شده (AES-256) در گوشی/مرورگر شما ذخیره می‌شود و به هیچ سروری نمی‌رود. با پاک کردن داده‌های مرورگر، گاوصندوق هم از بین می‌رود.", "سیاست حریم خصوصی", "شرایط و ضوابط", "بستن", "🍪 بدون کوکی، فقط localStorage.", "گاوصندوق روی دستگاه شما می‌ماند. تحلیل ناشناس (در صورت فعال‌سازی توسط مالک) به اجازهٔ شما نیاز دارد.", "بله، باشه", "نه", "اعلان کوکی", "داده‌های شما فقط روی گوشی شما و رمزگذاری‌شده می‌ماند.", "PassFast هیچ داده‌ای به سرور خود نمی‌فرستد.", "رمز اصلی در هیچ جا ذخیره نمی‌شود و قابل بازیابی نیست.", "ما از کوکی استفاده نمی‌کنیم، فقط localStorage.", "برای شنیدن صدا، مرورگر ممکن است از سرویس گفتار خود استفاده کند.", "PassFast برای استفادهٔ شخصی است.", "پین بانکی و رمز یکبارمصرف را اینجا نگذارید.", "در صورت فراموشی رمز اصلی یا پاک شدن داده‌ها، بازیابی ممکن نیست.", "سرویس «به همین صورت» و بدون ضمانت ارائه می‌شود.", "ذخیرهٔ رمز دیگران بدون اجازه ممنوع است.", "شماره کارت", "CVV", "شناسه UPI (نام@بانک)", "پین UPI", "حساب / ایمیل", "کلید مخفی 2FA (یا پیوند otpauth)", "برگزارکننده", "خوش آمدید! رمز اصلی را وارد کنید.", "دست‌کم ۶ نویسه بگذارید.", "دو رمز یکسان نیستند.", "دسترسی مجاز ✓", "دسترسی داده شد ✅", "رمز اصلی نادرست ❌", "دسترسی رد شد", "❌ رمز اصلی را وارد کنید.", "❌ رمز اصلی نادرست است.", "نمایش", "🗑 حذف", "✏️ ویرایش", "کپی", "نام کاربری", "انقضا", "کد 2FA", "هنوز دکمه‌ای نیست. از پایین یک رمز ذخیره کنید.", "هنوز چیزی ذخیره نشده است.", "🤔 در حال فکر...", "در حال شنیدن...", "می‌شنوم... بگویید 🎧", "نام را بگویید...", "میکروفون مسدود است 🔒 در کادر پایین از 🎤 صفحه‌کلید استفاده کنید 👇", "کپی شد ✅", "۱۵ ثانیه دیگر پنهان می‌شود", "کدام حساب؟", "نمایش بده", "صدای خودکار", "🗑 حذف / لغو ذخیره", "مطمئن؟ دوباره بزنید ❗", "رمز اصلی را فراموش کرده‌اید؟ گاوصندوق جدید بسازید", "بله، پاک کن", "پیش از تغییر رمز، کد ایمیل الزامی باشد", "📨 ارسال کد", "کد ۶ رقمی ایمیل", "✔️ تأیید", "🛟 بازیابی گوگل (اگر رمز را فراموش کردید)", "ابتدا با گوگل وارد شوید و بازیابی را روشن کنید. سپس اگر رمز اصلی را فراموش کردید، با کد OTP ایمیل گوگل رمز جدید می‌سازید و داده‌ها می‌ماند.", "🛟 روشن کردن بازیابی", "خاموش کردن بازیابی", "🛟 رمز را فراموش کرده‌اید؟ با گوگل بازیابی کنید", "🛟 بازیابی با گوگل", "📨 ارسال OTP", "کد OTP ۶ رقمی ایمیل", "✔️ تأیید OTP", "رمز اصلی جدید (۸+، حروف + اعداد)", "تنظیم رمز جدید", "📱 ثبت‌نام با تلفن", "ابتدا شماره موبایل را تأیید کنید. سپس رمز اصلی بسازید. اگر فراموش کردید، با OTP همین شماره رمز جدید می‌سازید.", "شماره موبایل (۱۰ رقم یا +کد کشور)", "کد OTP شش رقمی پیامک", "ادامه بدون تلفن (بدون بازیابی)", "📱 رمز را فراموش کرده‌اید؟ با OTP تلفن رمز جدید بسازید", "📱 بازیابی با تلفن", "📱 بازیابی با تلفن (اگر رمز را فراموش کردید)", "بازیابی را با OTP شماره تلفن روشن کنید. اگر رمز اصلی را فراموش کردید، با OTP همین شماره رمز جدید می‌سازید و داده‌ها می‌ماند.", "🤖 گفتگوی آزاد با جارویس (هوش مصنوعی، آنلاین)"]};
+(function(){
+var g=function(i){return document.getElementById(i)},I=window.I18N,idx={},cur='hx',AT=['placeholder','aria-label','title'];
+I.src.forEach(function(x,i){idx[x]=i});
+var SP={hx:'hi-IN',en:'en-IN',hi:'hi-IN',ur:'ur-PK',fa:'fa-IR'},FN={hx:'hi-Latn',en:'en',hi:'hi',ur:'ur',fa:'fa'};
+function tr(x){if(cur==='hx')return x;var i=idx[x],v=I[cur]&&I[cur][i];return v||x}
+function put(n,x,l,r){var nv=l+tr(x)+r;n.__s=x;n.__l=l;n.__r=r;n.__c=nv;if(n.nodeValue!==nv)n.nodeValue=nv}
+function tn(n,force){var p=n.parentNode;if(!p||/^(SCRIPT|STYLE|TEXTAREA)$/.test(p.nodeName))return;
+ if(force&&n.__s!==undefined){put(n,n.__s,n.__l,n.__r);return}
+ if(!force&&n.__c!==undefined&&n.nodeValue===n.__c)return;
+ var v=n.nodeValue,t=v.trim();if(idx[t]===undefined){n.__s=undefined;n.__c=undefined;return}
+ var k=v.indexOf(t);put(n,t,v.slice(0,k),v.slice(k+t.length))}
+function ta(el,force){if(!el.hasAttribute)return;AT.forEach(function(a){if(!el.hasAttribute(a))return;var key='__a_'+a,cv=el.getAttribute(a),o=el[key];
+ if(o===undefined||(!force&&cv!==el[key+'c'])){var t=cv.trim();if(idx[t]===undefined){el[key]=undefined;return}o=t;el[key]=o}
+ var nv=tr(o);el[key+'c']=nv;if(cv!==nv)el.setAttribute(a,nv)})}
+function walk(root,force){var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),n,L=[];while(n=w.nextNode())L.push(n);L.forEach(function(x){tn(x,force)})}
+function attrs(root,force){if(root.querySelectorAll)root.querySelectorAll('[placeholder],[aria-label],[title]').forEach(function(e){ta(e,force)});ta(root,force)}
+var T0='PassFast 🔐 Private Password Vault';
+function applyAll(){walk(document.body,true);attrs(document.body,true);document.title=tr(T0)}
+var mo=new MutationObserver(function(ms){ms.forEach(function(m){if(m.type==='characterData')tn(m.target);else if(m.type==='attributes')ta(m.target);else m.addedNodes.forEach(function(a){if(a.nodeType===3)tn(a);else if(a.nodeType===1){walk(a);attrs(a)}})})});
+mo.observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:AT});
+function setLang(c){if(!SP[c])c='hx';cur=c;window.__lang=c;try{store.set('pf_ui',c)}catch(e){}
+ var d=document.documentElement;d.lang=FN[c];d.dir=(c==='ur'||c==='fa')?'rtl':'ltr';
+ LANG=SP[c];try{store.set('lang',LANG);langTxt()}catch(e){}
+ g('langsel').value=c;g('langsel2').value=c;applyAll();try{setType()}catch(e){}try{render()}catch(e){}}
+window.__applyI18n=applyAll;window.__setLang=setLang;
+g('langsel').onchange=g('langsel2').onchange=function(){setLang(this.value)};
+// About / organiser
+document.body.appendChild(g('about'));g('abtimg').src=PHOTO;
+function openAbout(){g('about').classList.add('on');document.body.style.overflow='hidden';try{g('abtgo').focus({preventScroll:true})}catch(e){}}
+function closeAbout(){g('about').classList.remove('on');document.body.style.overflow='';try{sessionStorage.setItem('pf_seen','1')}catch(e){}}
+g('abtgo').onclick=closeAbout;g('abtx').onclick=closeAbout;g('aboutbtn').onclick=function(){try{g('setdlg').close()}catch(e){}openAbout()};
+document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('.ownchip'))openAbout()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&g('about').classList.contains('on'))closeAbout()});
+var seen=null;try{seen=sessionStorage.getItem('pf_seen')}catch(e){}if(!seen)openAbout();
+var saved=null;try{saved=store.get('pf_ui')}catch(e){}if(saved&&saved!=='hx')setLang(saved);
+})();
+}catch(e){console.error("PassFast module 8 failed:",e)}
+
+/* ---- module 9 ---- */
+try{
+(function(){
+window.askYes=function(msg){return new Promise(function(res){var d=document.getElementById('cfdlg'),done=false;document.getElementById('cfmsg').textContent=msg;function fin(v){if(done)return;done=true;try{d.close()}catch(e){d.removeAttribute('open')}res(v)}document.getElementById('cfyes').onclick=function(){fin(true)};document.getElementById('cfno').onclick=function(){fin(false)};d.oncancel=function(){fin(false)};try{d.showModal()}catch(e){d.setAttribute('open','')}})};
+var KEYS=["aname", "fp", "fpask", "fpcred", "lang", "pf_age", "pf_al", "pf_f", "pf_lastbk", "pf_seen", "pf_theme", "pf_ui", "pf_wipe", "req", "sname2", "tts", "vault_v1"],IDB=["vaultfp"],g=function(i){return document.getElementById(i)};
+var CF={hx:'Purana vault aur uska saara data hamesha ke liye mit jayega. Naya vault banana hai?',en:'The old vault and all its data will be erased for good. Create a new vault?',hi:'पुराना वॉल्ट और उसका सारा डेटा हमेशा के लिए मिट जाएगा। नया वॉल्ट बनाना है?',ur:'پرانا والٹ اور اس کا سارا ڈیٹا ہمیشہ کے لیے مٹ جائے گا۔ نیا والٹ بنانا ہے؟',fa:'گاوصندوق قدیمی و همهٔ داده‌هایش برای همیشه پاک می‌شود. گاوصندوق جدید ساخته شود؟'};
+window.__resetAll=function(){try{localStorage.clear()}catch(e){}try{sessionStorage.clear()}catch(e){}KEYS.forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});try{if(indexedDB.databases)indexedDB.databases().then(function(l){l.forEach(function(d){try{indexedDB.deleteDatabase(d.name)}catch(e){}})})}catch(e){}IDB.forEach(function(n){try{indexedDB.deleteDatabase(n)}catch(e){}});window.__f=0;window.__lu=0;setTimeout(function(){location.reload()},300)};
+var b=g('rstv');if(b){try{if(!(typeof raw==='function'&&raw()))b.classList.add('hide')}catch(e){}
+var CF2={hx:'Pakka? Sab mit jayega. Dobara dabao ❗',en:'Sure? Everything will be erased. Tap again ❗',hi:'पक्का? सब मिट जाएगा। दोबारा दबाइए ❗',ur:'پکا؟ سب مٹ جائے گا۔ دوبارہ دبائیں ❗',fa:'مطمئن؟ همه چیز پاک می‌شود. دوباره بزنید ❗'},armed=0,tm=0,orig='';
+b.onclick=function(){if(!armed){armed=1;orig=b.textContent;b.textContent=CF2[window.__lang||'hx']||CF2.hx;b.style.background='linear-gradient(135deg,#ff2d55,#ff6a00)';b.style.color='#fff';tm=setTimeout(function(){armed=0;b.textContent=orig;b.style.background='';b.style.color=''},6000)}else{clearTimeout(tm);b.disabled=true;b.textContent='...';window.__resetAll()}}}
+})();
+}catch(e){console.error("PassFast module 9 failed:",e)}
+
+/* ---- module 10 ---- */
+try{
+(function(){function show(m){if(location.hash!=='#debug')return;var t=document.getElementById('errtoast');if(!t){t=document.createElement('div');t.id='errtoast';t.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:999;background:#7f1d1d;color:#fff;padding:8px 12px;border-radius:10px;font:12px/1.4 system-ui;direction:ltr';t.onclick=function(){t.remove()};document.body.appendChild(t)}t.textContent='⚠️ '+m}
+addEventListener('error',function(e){show((e.message||'error')+' @'+String(e.filename||'').split('/').pop()+':'+e.lineno)});
+addEventListener('unhandledrejection',function(e){show('promise: '+(e.reason&&e.reason.message||e.reason))})})();
+}catch(e){console.error("PassFast module 10 failed:",e)}
+
+/* ---- module 11 ---- */
+try{
+(function(){
+var g=function(i){return document.getElementById(i)},ok=false,tok=null,busy=false;
+var tt=function(h,e){var l=window.__lang||'hx';return(l==='hx'||l==='hi')?h:e};
+function msg(t,good){var m=g('mailmsg');m.style.color=good?'var(--ac)':'var(--bad)';m.textContent=t}
+function api(name,body){return fetch('/api/'+name,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{})}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok)throw new Error(j.error||('HTTP '+r.status));return j})})}
+function netErr(e){return /HTTP 404|Failed to fetch|NetworkError|Load failed/i.test(e.message)?tt('Email service yahan connect nahi hai. Ye sirf apni Vercel hosting par chalta hai.','Email service is not connected here. It only works on your own Vercel hosting.'):e.message}
+var cb=g('cpmail');try{cb.checked=localStorage.getItem('pf_mailreq')==='1'}catch(e){}
+function sync(){g('mailbox').classList.toggle('hide',!cb.checked);try{localStorage.setItem('pf_mailreq',cb.checked?'1':'0')}catch(e){}if(!cb.checked){ok=false}}
+cb.onchange=sync;sync();
+g('mailsend').onclick=function(){if(busy)return;busy=true;ok=false;msg(tt('Bhej raha hoon...','Sending...'),true);
+ api('send-code').then(function(j){tok=j.token;msg(tt('✅ Code '+j.to+' par bhej diya. 10 minute me daalo.','✅ Code sent to '+j.to+'. Enter it within 10 minutes.'),true)}).catch(function(e){msg(netErr(e))}).then(function(){setTimeout(function(){busy=false},15000)})};
+g('mailok').onclick=function(){var c=g('mailcode').value.trim();if(!tok)return msg(tt('Pehle "Code bhejo" dabao.','Tap "Send code" first.'));if(!/^\d{6}$/.test(c))return msg(tt('6 ank ka code likho.','Enter the 6-digit code.'));
+ api('verify-code',{token:tok,code:c}).then(function(){ok=true;msg(tt('✅ Verify ho gaya. Ab password badal sakte ho.','✅ Verified. You can change the password now.'),true)}).catch(function(e){ok=false;msg(netErr(e))})};
+var o=g('cpbtn').onclick;
+g('cpbtn').onclick=async function(){var m=g('cpm');if(cb.checked&&!ok){m.style.color='var(--bad)';m.textContent=tt('Pehle email code verify karo.','Verify the email code first.');return}
+ await o.call(this);if(/^✅/.test(m.textContent)){ok=false;tok=null;g('mailcode').value='';g('mailmsg').textContent=''}};
+})();
+}catch(e){console.error("PassFast module 11 failed:",e)}
+</script>
+<script>/* PassFast phone recovery.
+   Register: verify phone by SMS OTP BEFORE the vault is created -> recovery is ON from day one.
+   Forgot password: phone OTP -> server releases a recovery key -> opens the encrypted recovery copy -> NEW Master Password.
+   The server never sees passwords or vault data. The phone number is only used to send the SMS and derive the key. */
+(function(){
+try{
+var g=function(i){return document.getElementById(i)},enc=new TextEncoder(),dec=new TextDecoder();
+var tt=function(h,e){var l=window.__lang||'hx';return(l==='hx'||l==='hi')?h:e};
+var LS={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},del:function(k){try{localStorage.removeItem(k)}catch(e){}}};
+var b64=function(b){var a=new Uint8Array(b),s='';for(var i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s)},ub=function(s){return Uint8Array.from(atob(s),function(c){return c.charCodeAt(0)})};
+var rkey=null,recovered=null,busy=false;
+function hasRec(){return LS.get('pf_rec')==='1'&&!!LS.get('pf_recblob')}
+function say(el,t,good){if(typeof el==='string')el=g(el);if(!el)return;el.style.color=good?'var(--ac)':'var(--bad)';el.textContent=t}
+function api(name,body){return fetch('/api/'+name,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{})}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||('HTTP '+r.status));e.status=r.status;throw e}return j})},function(){var e=new Error('net');e.status=0;throw e})}
+function soft(e){return e&&(e.status===0||e.status===404||e.status===503)}
+var inPreview=(function(){var t=false;try{t=window.top!==window.self}catch(e){t=true}return t||/claude|anthropic/i.test(String(location.hostname||''))})();
+function emsg(e){
+ if(e.status===404)return tt('Server function nahi mila (api folder deploy nahi hua). Poora zip Vercel par deploy karo.','Server function not found (the api folder was not deployed). Deploy the whole zip on Vercel.');
+ if(e.status===503)return tt('Twilio keys set nahi hain. Vercel > Environment Variables me daalo aur redeploy karo.','Twilio keys are not set. Add them in Vercel > Environment Variables and redeploy.');
+ if(e.status===0)return tt('Server tak nahi pahunch paaye. Internet check karo.','Could not reach the server. Check your internet.');
+ if(e.status===502)return tt('SMS nahi gaya. Twilio number/credit check karo (trial me sirf verified numbers par jata hai).','SMS failed. Check your Twilio number/credit (trial accounts only text verified numbers).');
+ return e.message}
+var PREVIEW_MSG=function(){return tt('ℹ️ Ye Claude preview hai, yahan SMS nahi ja sakta. Apni Vercel site par (Twilio setup ke baad) asli OTP aayega. Abhi demo ke liye neeche wala button dabao.','ℹ️ This is the Claude preview; SMS cannot be sent here. On your own Vercel site (after Twilio setup) the real OTP arrives. For a demo, use the button below.')};
+function norm(s){s=String(s||'').replace(/[\s\-()]/g,'');if(/^[6-9]\d{9}$/.test(s))return'+91'+s;if(/^\+[1-9]\d{7,14}$/.test(s))return s;return null}
+
+/* ---- crypto ---- */
+async function dk(secret,salt){var m=await crypto.subtle.importKey('raw',enc.encode(secret),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:100000,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function wrap(v,rk){var s=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),k=await dk(rk,s);var ct=await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,enc.encode(JSON.stringify(v)));return JSON.stringify({s:b64(s),iv:b64(iv),ct:b64(ct),t:Date.now()})}
+async function unwrap(rec,rk){var o=JSON.parse(rec),k=await dk(rk,ub(o.s));return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(o.iv)},k,ub(o.ct))))}
+/* the recovery key is itself kept encrypted under the Master-Password key, so a normal unlock can refresh the copy */
+async function sealRk(rk,k){var iv=crypto.getRandomValues(new Uint8Array(12));var ct=await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,enc.encode(rk));LS.set('pf_rkenc',JSON.stringify({iv:b64(iv),ct:b64(ct)}))}
+async function loadRk(){try{if(rkey||!key)return;var o=JSON.parse(LS.get('pf_rkenc')||'null');if(!o)return;rkey=dec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(o.iv)},key,ub(o.ct)))}catch(e){}}
+async function refresh(){try{if(!rkey||!key)return;await sealRk(rkey,key);LS.set('pf_recblob',await wrap(vault,rkey));LS.set('pf_rec','1')}catch(e){}}
+window.__loadRk=loadRk;
+if(typeof save==='function'){var orig=save;save=async function(){await orig.apply(this,arguments);await refresh()}}
+if(typeof MutationObserver!=='undefined'&&g('lock')){new MutationObserver(function(){if(g('lock').classList.contains('hide'))loadRk().then(sync)}).observe(g('lock'),{attributes:true,attributeFilter:['class']})}
+
+/* ---- phone + OTP widget (used on 3 screens) ---- */
+function widget(box,o){
+ box.innerHTML='<div class="row" style="margin:6px 0"><input type="tel" class="pw-ph" inputmode="tel" placeholder="Mobile number (10 ank, ya +country code)" autocomplete="tel" style="flex:1;min-width:150px"><button type="button" class="pw-send" style="flex:none">📨 OTP bhejo</button></div><div class="pw-s2 hide"><input class="pw-otp" inputmode="numeric" maxlength="6" placeholder="SMS ka 6 ank wala OTP" autocomplete="one-time-code"><button type="button" class="pw-ver" style="width:100%;margin-top:6px">✔️ OTP verify karo</button></div><p class="s pw-msg" style="margin:6px 0 0;font-size:13px"></p>'+(o.skip?'<button type="button" class="g pw-skip hide" style="width:100%;margin-top:6px;font-size:13px">Bina phone ke aage badho (recovery nahi hogi)</button>':'');
+ var q=function(c){return box.querySelector(c)},tok=null,wait=0,msg=q('.pw-msg');
+ q('.pw-send').onclick=async function(){
+  if(busy||wait>0)return;var ph=norm(q('.pw-ph').value);if(!ph)return say(msg,tt('Sahi mobile number daalo (10 ank).','Enter a valid mobile number (10 digits).'));
+  if(inPreview){say(msg,PREVIEW_MSG());var s0=q('.pw-skip');if(s0)s0.classList.remove('hide');return}busy=true;try{var j=await api('phone-send',{phone:ph});tok=j.otp;q('.pw-s2').classList.remove('hide');say(msg,tt('✅ OTP '+j.to+' par SMS se bhej diya. 10 minute me daalo.','✅ OTP sent by SMS to '+j.to+'. Enter it within 10 minutes.'),true);
+   wait=30;var t=setInterval(function(){wait--;if(wait<=0)clearInterval(t)},1000)}
+  catch(e){say(msg,emsg(e));if(soft(e)&&o.skip){var s=q('.pw-skip');if(s)s.classList.remove('hide')}}busy=false};
+ q('.pw-ver').onclick=async function(){var c=q('.pw-otp').value.trim();if(!tok)return say(msg,tt('Pehle "OTP bhejo" dabao.','Tap "Send OTP" first.'));if(!/^\d{6}$/.test(c))return say(msg,tt('6 ank ka OTP likho.','Enter the 6-digit OTP.'));
+  try{var j=await api('phone-verify',{otp:tok,code:c});say(msg,tt('✅ Number verify ho gaya.','✅ Number verified.'),true);o.onOk(j.rk,j.phone)}catch(e){say(msg,emsg(e))}};
+ var sk=q('.pw-skip');if(sk){sk.onclick=function(){o.skip()};if(inPreview){sk.classList.remove('hide');msg.style.color='var(--mut)';msg.textContent=PREVIEW_MSG()}}
+}
+
+/* ---- 1) first launch: register phone before creating the vault ---- */
+var isFirst=!(typeof raw==='function'&&raw());
+function showForm(){g('phreg').classList.add('hide');g('lf').classList.remove('hide')}
+if(isFirst&&g('phreg')){
+ g('lf').classList.add('hide');g('phreg').classList.remove('hide');
+ var rb=g('rstv'),ro=g('rcopen');if(rb)rb.classList.add('hide');if(ro)ro.classList.add('hide');
+ widget(g('phbox'),{skip:function(){showForm()},onOk:function(rk,ph){rkey=rk;LS.set('pf_phone',ph);showForm();g('lockmsg').textContent=tt('Number verify ✅ Ab apna Master Password banao.','Number verified ✅ Now create your Master Password.')}});
+}
+
+/* ---- 2) Settings: turn recovery on for an existing vault / turn off ---- */
+function sync(){var on=hasRec();if(!g('recst'))return;g('recoff').classList.toggle('hide',!on);g('recbox').classList.toggle('hide',on);
+ say('recst',on?tt('✅ Recovery ON hai ('+(LS.get('pf_phone')||'phone')+').','✅ Recovery is ON ('+(LS.get('pf_phone')||'phone')+').'):tt('⚪ Recovery band hai. Number verify karke ON karo.','⚪ Recovery is off. Verify your number to turn it on.'),on)}
+if(g('recbox'))widget(g('recbox'),{onOk:async function(rk,ph){if(typeof key==='undefined'||!key)return say('recst',tt('Pehle vault unlock karo, phir ON karo.','Unlock the vault first, then turn it on.'));rkey=rk;LS.set('pf_phone',ph);await refresh();sync()}});
+if(g('recoff'))g('recoff').onclick=function(){rkey=null;['pf_recblob','pf_rec','pf_rkenc','pf_phone'].forEach(LS.del);sync()};
+
+/* ---- 3) forgot Master Password ---- */
+if(g('rcopen'))g('rcopen').onclick=function(){var p=g('recpanel');p.classList.toggle('hide');if(p.classList.contains('hide'))return;
+ if(!hasRec()){say('rcmsg',tt('❌ Is device par Recovery pehle ON nahi thi, isliye data wapas nahi aa sakta. Naya vault banane ke liye upar wala button use karo.','❌ Recovery was not turned on before on this device, so the data cannot be restored. Use the button above to start a new vault.'));g('rcbox').classList.add('hide');return}
+ g('rcbox').classList.remove('hide');say('rcmsg',tt('Wahi mobile number daalo jisse register kiya tha.','Enter the same mobile number you registered with.'),true);
+ widget(g('rcbox'),{onOk:async function(rk){try{recovered=await unwrap(LS.get('pf_recblob'),rk);rkey=rk;
+  say('rcmsg',tt('✅ OTP sahi hai. '+recovered.length+' entries mili. Ab naya Master Password banao.','✅ OTP verified. '+recovered.length+' entries found. Now create a new Master Password.'),true);g('rcbox').classList.add('hide');g('rcstep3').classList.remove('hide')}
+  catch(e){say('rcmsg',tt('Ye number us recovery se match nahi karta, ya recovery data kharab hai.','This number does not match the recovery, or the recovery data is damaged.'))}}})};
+if(g('rcset'))g('rcset').onclick=async function(){var a=g('rcn1').value,b=g('rcn2').value;
+ if(!recovered)return say('rcmsg',tt('Pehle OTP verify karo.','Verify the OTP first.'));
+ if(a.length<8||!/[A-Za-z]/.test(a)||!/[0-9]/.test(a))return say('rcmsg',tt('Naya password: 8+ akshar, letters aur numbers dono.','New password: 8+ characters, letters and numbers.'));
+ if(a!==b)return say('rcmsg',tt('Dono password alag hain.','The two passwords do not match.'));
+ try{
+  var salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+  var m=await crypto.subtle.importKey('raw',enc.encode(a),'PBKDF2',false,['deriveKey']);
+  var k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:250000,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+  var ct=await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,enc.encode(JSON.stringify(recovered)));
+  var back=JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},k,ct)));   /* prove the new vault opens BEFORE replacing the old one */
+  if(back.length!==recovered.length)throw new Error('check');
+  LS.set('vault_v1_old',LS.get('vault_v1')||'');LS.set('vault_v1',JSON.stringify({s:b64(salt),iv:b64(iv),ct:b64(ct)}));
+  await sealRk(rkey,k);LS.set('pf_recblob',await wrap(recovered,rkey));LS.set('pf_rec','1');LS.del('pf_f');
+  say('rcmsg',tt('✅ Naya Master Password set. Data wahi hai. Ab login karo.','✅ New Master Password set. Your data is intact. Sign in now.'),true);
+  setTimeout(function(){location.reload()},1200)
+ }catch(e){say('rcmsg',tt('Kuch galat hua, purana vault safe hai. Dobara try karo.','Something went wrong; the old vault is untouched. Try again.'))}};
+sync();
+}catch(err){console.error('PassFast recovery failed:',err)}
+})();
+</script>
+</body></html>
