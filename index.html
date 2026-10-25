@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="hi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PassFast 🔐 Private Password Vault</title>
+<meta name="description" content="PassFast: private digital tijori. Passwords ko bolkar ya fingerprint se turant nikaalo. Sab kuch aapke phone me encrypted, kisi server par nahi.">
+<meta name="theme-color" content="#2563eb">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<meta property="og:type" content="website"><meta property="og:title" content="PassFast 🔐 Private Password Vault">
+<meta property="og:description" content="Voice se chalne wali encrypted password tijori. Data sirf aapke phone me.">
+<meta property="og:image" content="https://YOUR-DOMAIN/og-image.jpg"><meta property="og:image:alt" content="PassFast private password vault"><meta property="og:url" content="https://YOUR-DOMAIN/">
+<meta name="twitter:card" content="summary_large_image"><link rel="canonical" href="https://YOUR-DOMAIN/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔐%3C/text%3E%3C/svg%3E">
+
+<link rel="stylesheet" href="style.css"></head><body><canvas id="fx" style="position:fixed;inset:0;z-index:-1;pointer-events:none"></canvas><div class="wrap">
+
+<div id="lock" class="lock"><div class="lk-top"><select id="langsel2" aria-label="Language"><option value="hx">Hinglish</option><option value="en">English</option><option value="hi">हिन्दी</option><option value="ur">اردو</option><option value="fa">فارسی</option></select></div>
+  <div class="ownslot"></div>
+  <div style="display:none" aria-hidden="true"><div class="fp" id="fp" role="button" aria-label="Fingerprint">
+    <svg aria-hidden="true" focusable="false" viewBox="0 0 120 140" width="150" height="175"><defs><linearGradient id="fpg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0ea5b7"/><stop offset="1" stop-color="#2563eb"/></linearGradient><clipPath id="fpc"><rect x="6" y="6" width="108" height="128" rx="54"/></clipPath></defs>
+    <g clip-path="url(#fpc)"><g id="ridges" fill="none" stroke="url(#fpg)" stroke-width="2.6" stroke-linecap="round"></g><rect class="beam" x="6" y="0" width="108" height="4" rx="2" fill="#0ea5b7"/></g></svg></div>
+  <div class="hud" id="fptxt" style="text-align:center;margin:0 0 10px">TOUCH TO UNLOCK</div>
+  <div class="row" style="margin:0 0 12px"><button type="button" class="g" id="fpgo">👆 Fingerprint se kholo</button><button type="button" class="g" id="pwgo">🔑 Password se kholo</button></div></div>
+  <h1>PassFast</h1>
+  <p class="s" id="lockmsg">Pehli baar hai? Ek Master Password banao. Ye yaad rakhna, ye kahin save nahi hota!</p>
+  <div id="phreg" class="hide" style="margin:10px 0"><div class="stp"><b>📱 Phone se register karo</b><p class="s" style="font-size:13px;margin:6px 0">Pehle mobile number verify karo. Phir Master Password banao. Password bhoolne par isi number ke OTP se naya password ban sakta hai.</p><div id="phbox"></div></div></div>
+  <form id="lf" autocomplete="on"><input id="vid" type="text" name="username" autocomplete="username" value="vault-owner" readonly aria-label="Vault ID" style="text-align:center;opacity:.7"><div class="row"><input id="mp" name="password" type="password" placeholder="Master Password" autocomplete="current-password"><button type="button" class="g" id="eye0" style="flex:none">👁</button></div>
+  <input id="mp2" type="password" placeholder="Master Password dobara" autocomplete="new-password">
+  <div class="err" id="err"></div>
+  <button id="unlock" style="width:100%;margin-top:6px">Khol do 🔓</button><button type="button" class="g" id="rstv" style="width:100%;margin-top:12px;font-size:13px">Master Password bhool gaye? Naya vault banao</button><button type="button" class="g" id="rcopen" style="width:100%;margin-top:8px;font-size:13px">📱 Password bhool gaye? Phone OTP se naya banao</button><div id="recpanel" class="hide" style="margin-top:10px"><div class="stp"><b>📱 Phone se recovery</b><p class="s" id="rcmsg" style="margin:6px 0;font-size:13px"></p><div id="rcbox"></div><div id="rcstep3" class="hide"><input id="rcn1" type="password" placeholder="Naya Master Password (8+, letters + numbers)" autocomplete="new-password"><input id="rcn2" type="password" placeholder="Naya password dobara" autocomplete="new-password"><button type="button" id="rcset" style="width:100%;margin-top:6px">Naya password set karo</button></div></div></div></form>
+  
+</div>
+
+<div id="app" class="hide">
+  <div class="ownslot"></div>
+  <div class="top"><div><h1>PassFast 🔐</h1><p class="s">Mic dabao aur bolo: <i>"Instagram ka password"</i></p></div>
+  <div class="row" style="flex:none;gap:6px"><button class="g" id="setbtn" aria-label="Settings" style="flex:none">⚙️</button><button class="g" id="lockbtn" style="flex:none">Lock 🔒</button></div></div>
+
+  <div class="micwrap"><div class="reactor" id="mic" role="button" aria-label="Bolo"><div class="r r1"></div><div class="r r2"></div><div class="r r3"></div><div class="core">🎤</div></div><div class="wave" id="wave"></div><div class="hud" id="hud">J.A.R.V.I.S. ONLINE · TAP KARO</div><div id="heard"></div><div id="say"></div><div class="row cmd"><input id="cmd" placeholder="Yahan likho ya keyboard ke 🎤 se bolo..." autocomplete="off"><button id="send" style="flex:none">➤</button></div><label style="font-size:13px;color:var(--mut);display:flex;gap:6px;align-items:center;margin-top:8px"><input type="checkbox" id="auto" checked style="width:auto;margin:0"> ⚡ Bolne ke baad khud bhej do (keyboard 🎤 ke liye)</label></div>
+  <div id="result"></div>
+    <div class="card">
+    <b>➕ Naya password save karo</b>
+    <div class="chips" id="chips"></div>
+    <div class="sel" id="sel"></div>
+    <select id="ptype" aria-label="Type"><option value="login">🔑 Login / Password</option><option value="card">💳 ATM / Credit card</option><option value="upi">📱 UPI</option><option value="note">📝 Secure note</option><option value="totp">🔢 2FA code</option></select>
+<input id="n" placeholder="Kiska? (ya apna naam likho)">
+    <div class="row"><input id="nick" placeholder="Voice naam (jis naam se bulaoge)"><button type="button" class="g" id="nickmic" style="flex:none">🎤</button></div>
+    <small style="color:var(--mut)">Jaise "mera pehla mail". 🎤 dabake bolo, jaisa sunega waisa hi save karega, to match pakka hoga.</small>
+    <input id="u" placeholder="Username / Email / Number" autocomplete="off"><input id="px" class="hide" placeholder="Expiry MM/YY" maxlength="5" autocomplete="off">
+    <div class="row"><input id="p" type="password" placeholder="Password" autocomplete="off"><button type="button" class="g" id="eye" style="flex:none">👁</button></div>
+    <textarea id="pnote" class="hide" rows="3" placeholder="Note likho..." style="width:100%"></textarea><div id="pgx"><div class="row" style="margin:6px 0"><button type="button" class="g" id="gen">🎲 Strong password banao</button></div><div class="m2"><i id="sm"></i></div><small id="stxt" style="color:var(--mut)"></small></div><button id="add" style="width:100%;margin-top:6px">Save karo ✅</button><button type="button" class="g hide" id="ced" style="width:100%;margin-top:6px">Cancel</button>
+  </div>
+  <div class="card"><b>🔘 Mere buttons</b><p class="s" style="margin:4px 0 10px">Button dabao, uska password aa jayega. Naya naam likhoge to uska bhi button ban jayega.</p><div class="tiles" id="tiles"></div></div>
+  <section id="about" class="abt" role="dialog" aria-modal="true" aria-label="About"><button type="button" id="abtx" class="abt-x" aria-label="Close">✕</button><div class="abt-in">
+<div class="abt-hero"><div class="abt-av"><span class="ring"></span><img id="abtimg" alt="S.K Aayan" width="112" height="112"><span class="vb" aria-hidden="true">✓</span></div><div class="abt-role">👑 ORGANISER</div><h2 class="abt-name">S.K Aayan</h2><p class="abt-tag">Ye application S.K Aayan ki hai.</p></div>
+<div class="abt-stats"><div><b>256</b><span>bit encryption</span></div><div><b>0</b><span>server</span></div><div><b>5</b><span>bhashayein</span></div></div>
+<h3>Kyun banaya?</h3><p>Har app ka alag password yaad rakhna mushkil hai. PassFast aapke saare passwords ek safe tijori me rakhta hai, aur aap bolkar ya likhkar turant nikaal sakte ho.</p>
+<h3>Kaise bana?</h3>
+<ol class="abt-steps"><li><b>1</b><div><strong>Idea</strong><span>Organiser S.K Aayan ka concept: private, tez aur bolkar chalne wali tijori.</span></div></li>
+<li><b>2</b><div><strong>Design</strong><span>Jarvis jaisa voice assistant aur neon look.</span></div></li>
+<li><b>3</b><div><strong>Security</strong><span>AES-256 encryption, Master Password se lock.</span></div></li>
+<li><b>4</b><div><strong>Launch</strong><span>Seedhi website, HTTPS par, bina kisi server ke.</span></div></li></ol>
+<button type="button" id="abtgo">Shuru karo →</button><p class="abt-foot">© 2026 PassFast · Organiser: S.K Aayan</p></div></section>
+<dialog class="lg" id="cfdlg"><p id="cfmsg" style="font-size:16px;line-height:1.5;margin:4px 0 0"></p><div class="row" style="margin-top:16px;justify-content:flex-end"><button type="button" class="g" id="cfno">Cancel</button><button type="button" id="cfyes" style="background:linear-gradient(135deg,#ff2d55,#ff6a00)">Haan, mita do</button></div></dialog>
+<dialog class="lg" id="setdlg" aria-label="Settings"><div class="dh"><b>⚙️ Settings</b><button type="button" class="g" id="setx" aria-label="Close">✕</button></div><button type="button" class="g" id="aboutbtn" style="width:100%;margin-bottom:6px">ℹ️ About aur Organiser</button>
+<div class="row" style="margin:10px 0"><select id="langsel" aria-label="Language"><option value="hx">Hinglish</option><option value="en">English</option><option value="hi">हिन्दी</option><option value="ur">اردو</option><option value="fa">فارسی</option></select><select id="thsel" aria-label="Theme"><option value="auto">🌓 Auto theme</option><option value="light">☀️ Light</option><option value="dark">🌙 Dark</option></select></div>
+<label style="font-size:13px;color:var(--mut)">⏱ Auto-lock</label><select id="alsel"><option value="1">1 minute</option><option value="5">5 minute</option><option value="15">15 minute</option></select>
+<label style="display:flex;gap:8px;align-items:center;margin:10px 0;font-size:14px"><input type="checkbox" id="wipe" style="width:auto;margin:0"> 10 galat tries ke baad vault mita do</label>
+
+<details class="sec" id="micsec"><summary>🎙️ Mic aur Awaaz</summary><div class="sb"><details class="sec"><summary>🩺 Mic check</summary><div class="sb"><p class="s" style="margin:6px 0 10px">Mic sun nahi raha? Ye dabao, ye batayega dikkat kahan hai.</p>
+    <button id="diag" style="width:100%">Mic check karo 🔍</button><div id="dout" style="margin-top:10px;font-size:14px;line-height:1.7"></div><div class="meter"><i id="mlev"></i></div></div></details><details class="sec"><summary>🔊 Awaaz settings</summary><div class="sb">
+    <label style="display:flex;gap:8px;align-items:center;margin:10px 0;font-size:14px"><input type="checkbox" id="tson" style="width:auto;margin:0"> Jarvis bol ke jawab de</label>
+    <small style="color:var(--mut)">Speed</small><input type="range" id="trate" min=".6" max="1.5" step=".1">
+    <small style="color:var(--mut)">Pitch</small><input type="range" id="tpitch" min=".6" max="1.6" step=".1">
+    <select id="tvoice"></select><button type="button" class="g" id="ttest" style="width:100%">Test karo 🔈</button></div></details><details class="sec"><summary>⚙️ Mic settings</summary><div class="sb">
+    <div class="row"><input id="aname" placeholder="Mic ka naam (jaise Jarvis, Friday)"><button type="button" class="g" id="anamemic" style="flex:none">🎤</button></div>
+    <label style="display:flex;gap:8px;align-items:center;margin:8px 0;font-size:14px"><input type="checkbox" id="req" style="width:auto;margin:0"> Pehle mic ka naam bolna zaroori ho</label>
+    <label style="display:flex;gap:8px;align-items:center;margin:8px 0;font-size:14px"><input type="checkbox" id="aion" checked style="width:auto;margin:0"> 🤖 Jarvis se khuli baatcheet (AI, internet se)</label><button type="button" class="g" id="lang" style="width:100%"></button>
+    <button type="button" class="g" id="always" style="width:100%;margin-top:8px"></button>
+    <small style="color:var(--mut)">"Hamesha sunna" ON karo to Jarvis ki tarah baat-cheet chalti rahegi. Is mode me upar wala naam-tick laga lo, taaki wo sirf tumhari baat sune.</small></div></details></div></details><details class="sec" id="recsec"><summary>📱 Phone Recovery (Password bhool jaao to)</summary><div class="sb"><p class="s" style="margin:0 0 8px;font-size:13px">Phone number se OTP lekar recovery ON karo. Phir Master Password bhoolne par isi number ke OTP se naya password ban jayega aur data wahi rahega.</p><p class="s" id="recst" style="margin:6px 0;font-size:13px"></p><div id="recbox"></div><button type="button" id="recoff" class="g hide" style="width:100%;margin-top:6px">Recovery band karo</button></div></details><details class="sec"><summary>💾 Backup aur Restore</summary><div class="sb">
+<p class="s" style="margin:6px 0 8px;font-size:13px">Backup file encrypted hoti hai. Isse kholne ke liye wahi Master Password chahiye jo backup ke waqt tha.</p>
+<button type="button" id="bkx" style="width:100%">⬇️ Backup file banao</button>
+<p class="s" id="bkl" style="margin:8px 0;font-size:13px"></p>
+<textarea id="bkt" rows="3" placeholder="Backup text yahan aayega / restore ke liye yahan paste karo" style="width:100%"></textarea>
+<div class="row" style="margin-top:6px"><button type="button" class="g" id="bkc">📋 Text copy karo</button><button type="button" class="g" id="bkf">📂 File se restore</button></div>
+<input type="file" id="bkfile" accept=".json,application/json,text/plain" class="hide">
+<input id="bkpw" type="password" placeholder="Backup wala Master Password" autocomplete="off" style="margin-top:6px">
+<button type="button" id="bki" style="width:100%;margin-top:6px">Restore karo (vault me jodo)</button>
+<p class="s" id="bkm" style="margin:8px 0 0;font-size:13px"></p></div></details><details class="sec"><summary>🔑 Master Password badlo</summary><div class="sb"><input id="cpo" type="password" placeholder="Purana password" autocomplete="off"><input id="cpn" type="password" placeholder="Naya password (8+, letters + numbers)" autocomplete="off"><input id="cpn2" type="password" placeholder="Naya password dobara" autocomplete="off"><label style="display:flex;gap:8px;align-items:center;margin:10px 0 6px;font-size:14px"><input type="checkbox" id="cpmail" style="width:auto;margin:0">Password badalne se pehle email code zaroori ho</label>
+<div id="mailbox" class="hide"><div class="row" style="margin:6px 0"><button type="button" class="g" id="mailsend">📨 Code bhejo</button><input id="mailcode" inputmode="numeric" maxlength="6" placeholder="Email ka 6 ank wala code" autocomplete="one-time-code" style="flex:1;min-width:140px"><button type="button" id="mailok">✔️ Verify karo</button></div><p class="s" id="mailmsg" style="margin:4px 0 8px;font-size:13px"></p></div>
+<button id="cpbtn" style="width:100%;margin-top:6px">Password badlo</button><p class="s" id="cpm" style="margin:8px 0 0;font-size:13px"></p></div></details><details class="sec" id="fpcard"><summary>🔐 Fingerprint Setup</summary><div class="sb">
+    <p class="s" style="margin:6px 0 12px">Ek baar set karo. Fir har baar vault <b>fingerprint ya password</b>, dono me se kisi se bhi khulega.</p>
+    <div class="stp"><b>Tarika 1: Phone Passkey Fingerprint</b><p class="s" id="fpst" style="margin:6px 0 8px;font-size:13px"></p><button id="fpbtn" style="width:100%"></button></div>
+    <div class="stp"><b>Tarika 2: Chrome Fingerprint (sabse pakka)</b><p class="s" style="margin:6px 0 8px;font-size:13px">Master Password dobara daalo, main Chrome ko save karne bolta hoon. Fir fingerprint se hi bhar jayega.</p>
+      <input id="fpmp" type="password" placeholder="Master Password" autocomplete="off"><button id="fpchrome" style="width:100%;margin-top:6px">Chrome me set karo 🔑</button><p class="s" id="fpst2" style="margin:8px 0 6px;font-size:13px"></p>
+      <small style="color:var(--mut)">Phir Chrome ⋮ → Settings → Password Manager → Settings → <b>"Use screen lock when filling passwords"</b> ON karo.</small></div>
+    <small style="color:var(--mut)">Master Password hamesha backup hai, bhoolna mat.</small></div></details></dialog>
+          
+
+  <div class="card"><b>📋 Saved accounts <span id="cnt"></span></b><input id="q" placeholder="Search karo...">
+    <div id="list"></div></div>
+  <p class="s" style="text-align:center">Sab data tere phone/browser me encrypted (AES-256) save hota hai. Kisi server pe nahi jaata. Browser data clear kiya toh vault bhi jayega.</p>
+</div>
+
+</div><div class="ftr">© 2026 PassFast · <a href="#privacy">Privacy Policy</a> · <a href="#terms">Terms &amp; Conditions</a> · <span style="opacity:.5">r11</span></div>
+<dialog class="lg" id="privacy"><h2>Privacy Policy</h2><ul><li>Aapka data sirf aapke phone me, encrypted rehta hai.</li><li>PassFast koi data apne server par nahi bhejta.</li><li>Master Password kahin save nahi hota aur recover nahi ho sakta.</li><li>Hum cookies nahi use karte, sirf localStorage use hota hai.</li><li>Voice sunne ke liye browser apni speech service use kar sakta hai.</li><li>Register/recovery ke liye aapka mobile number SMS OTP bhejne ke liye hamare server aur SMS provider (Twilio) se hokar jata hai. Number hum store nahi karte, aur aapke passwords server par kabhi nahi jaate.</li><li>Recovery ke liye vault ki ek encrypted copy sirf aapke phone me rakhi jati hai. Use kholne ki chabi sirf us mobile number ke OTP se milti hai.</li><li>OTP sirf aapke diye mobile number par SMS se aata hai aur 10 minute me expire ho jata hai.</li><li>Recovery chalu kiye bina Master Password bhoolne par data wapas nahi aa sakta.</li><li>Jarvis AI baatcheet ON ho to jo sawal aap Jarvis se poochte ho (sirf wo text) hamare server ke raaste AI service (Anthropic) tak jata hai. Passwords, usernames aur account ke naam kabhi nahi bheje jate. Settings me ise band kar sakte ho.</li></ul><form method="dialog"><button>Band karo</button></form></dialog>
+<dialog class="lg" id="terms"><h2>Terms & Conditions</h2><ul><li>PassFast personal use ke liye hai.</li><li>Bank PIN aur OTP yahan mat rakho.</li><li>Master Password bhoolne ya data clear hone par data wapas nahi milta.</li><li>Service jaisi hai waisi di jaati hai, bina guarantee ke.</li><li>Kisi aur ka password bina ijazat save karna mana hai.</li><li>Phone Recovery Master Password bhoolne se pehle ON honi chahiye (naye vault me register ke time apne aap ON ho jati hai).</li><li>Jo mobile number recovery ke liye use hua, uski suraksha aapki zimmedari hai. Jiske paas us number ke SMS ka access hoga wo recovery kar sakta hai.</li><li>Recovery copy sirf isi browser/phone me hoti hai. Browser data clear hone par wo bhi mit jati hai, isliye Backup bhi rakho.</li><li>Jarvis ke AI jawab galat ho sakte hain. Zaroori baton ke liye khud check karo.</li></ul><form method="dialog"><button>Band karo</button></form></dialog>
+<div id="cb" class="hide" role="dialog" aria-label="Cookie notice"><b>🍪 Cookies nahi, sirf localStorage.</b> Vault aapke device me rehta hai. Anonymous analytics (agar owner ne ON kiya ho) ke liye aapki ijazat chahiye. <a href="#privacy" style="color:var(--ac)">Privacy Policy</a><div class="r"><button id="cby">Haan, theek hai</button><button id="cbn" class="g">Nahi</button></div></div>
+<script src="main.js"></script>
+<script src="features.js"></script>
+<script src="recovery.js"></script>
+</body></html>
